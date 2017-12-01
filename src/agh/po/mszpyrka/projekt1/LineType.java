@@ -11,7 +11,8 @@ public enum LineType {
     NumberParenthPoint,     // N - 4)
     LetterParenthPoint,     // L - b)
     MixedParenthPoint,      // M - 16c)
-    Trash;                  // X - unimportant lines
+    Trash,                  // X - unimportant lines
+    MainHeader;             // H - KONSTYTUCJA RZECZYPOSPOLITEJ POLSKIEJ
 
     /*
      * depth levels in konstytucja.txt:
@@ -85,6 +86,9 @@ public enum LineType {
             case Trash:
                 return "X";
 
+            case MainHeader:
+                return "H";
+
             default:
                 return null;
         }
@@ -97,6 +101,8 @@ public enum LineType {
 
     public int getDepthLevel () {
         switch (this) {
+            case MainHeader:
+                return 0;
 
             case Section:
                 return 1;
@@ -126,6 +132,52 @@ public enum LineType {
                 return 9;
 
             case RegularText:
+                return 10;
+
+            default:
+                return 20;
+        }
+    }
+
+    /**
+     * gets depth level of a LineType represented by given signature
+     * @param signature - character representing LineType
+     * @return - depth level of a LineType
+     */
+
+    public int getDepthLevelFromSignature (char signature) {
+        switch (signature) {
+            case 'H':
+                return 0;
+
+            case 'S':
+                return 1;
+
+            case 'C':
+                return 2;
+
+            case 'T':
+                return 3;
+
+            case 'A':
+                return 4;
+
+            case 'D':
+                return 5;
+
+            case 'P':
+                return 6;
+
+            case 'N':
+                return 7;
+
+            case 'M':
+                return 8;
+
+            case 'L':
+                return 9;
+
+            case 'R':
                 return 10;
 
             default:
