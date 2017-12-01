@@ -4,7 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.LinkedList;
 
-public class RawTextParser {
+/**
+ * Class used for parsing source text and creating further usable list of lines,
+ * each line is marked with proper LineType sign at the beginning.
+ */
+
+class RawTextParser {
 
     /**
      * converts raw text from input file to list of ready-to-use lines for further document composing
@@ -12,10 +17,11 @@ public class RawTextParser {
      * @return - awesome list of text lines divided into different categories (LineType values)
      */
 
-    public static LinkedList<String> parseRawText(BufferedReader reader) {
+    static LinkedList<String> parseRawText(BufferedReader reader) {
         LinkedList<String> list = initialParse(reader);
         deleteWordBreaks(list);
         connectTitlesWithChapters(list);
+        setMainHeader(list);
         return list;
     }
 
@@ -44,7 +50,7 @@ public class RawTextParser {
                     // RegularText and Title lines needn't being splitted
                     if(lineType == LineType.RegularText || lineType == LineType.Title) {
                         result.add((signature + nextLine).trim());
-                        nextLine = "";
+                        nextLine = null;
                     }
 
                     // Section, Chapter and Article contain heading name that ends at second white space and may be followed by another lineType
@@ -56,7 +62,7 @@ public class RawTextParser {
 
                     // Trash lines are not included in output list
                     else if(lineType == LineType.Trash) {
-                        nextLine = "";
+                        nextLine = null;
                     }
 
                     // other types (all point types) end their name after first whitespace and may be followed by another lineType
@@ -79,7 +85,6 @@ public class RawTextParser {
     /**
      * deletes word-breaking hyphens and connects words from consecutive RegularText type lines
      * @param sourceList - list of lines created with initialParse method
-     * @return - list of lines without words splitted into different lines
      */
 
     private static void deleteWordBreaks (LinkedList<String> sourceList) {
@@ -121,6 +126,22 @@ public class RawTextParser {
         }
     }
 
+    /**
+     * sets firts capitalised lines a MainHeader lineType
+     * @param sourceList - list of String parsed with initialParse method
+     */
+
+    private static void setMainHeader (LinkedList<String> sourceList) {
+        while(sourceList.size() > 0 && !sourceList.getFirst().startsWith("T"))  // firstly removes all contents above the mainHeader
+            sourceList.removeFirst();
+
+        int i = 0;
+        String nextLine;
+        while(i < sourceList.size() && (nextLine = sourceList.get(i)).startsWith("T")) {
+            sourceList.set(i, "H" + nextLine.substring(1, nextLine.length()));
+            i++;
+        }
+    }
 
     /**
      * tests whether a line is a potential heading beginning
@@ -129,6 +150,9 @@ public class RawTextParser {
      */
 
     private static LineType getLineType (String line) {
+
+        if(line == null)
+            return null;
 
         line = line.trim();
 
