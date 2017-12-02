@@ -1,7 +1,9 @@
 package agh.po.mszpyrka.projekt1;
 
+import javax.sound.sampled.Line;
+
 public enum LineType {
-    RegularText,            // R - regular contents not including any headings
+    MainHeader,             // H - KONSTYTUCJA RZECZYPOSPOLITEJ POLSKIEJ
     Section,                // S - DZIAŁ XI
     Chapter,                // C - Rozdzial 4.
     Title,                  // T - RZECZPOSPOLITA
@@ -9,13 +11,15 @@ public enum LineType {
     NumberDotPoint,         // D - 4.
     MixedDotPoint,          // P - 3b.
     NumberParenthPoint,     // N - 4)
-    LetterParenthPoint,     // L - b)
     MixedParenthPoint,      // M - 16c)
-    Trash,                  // X - unimportant lines
-    MainHeader;             // H - KONSTYTUCJA RZECZYPOSPOLITEJ POLSKIEJ
+    LetterParenthPoint,     // L - b)
+    RegularText,            // R - regular contents not including any headings
+    Trash;                  // X - unimportant lines
+
 
     /*
      * depth levels in konstytucja.txt:
+     *  0 -> MainHeader
      *  1 -> Chapter
      *  2 -> Title
      *  3 -> Article
@@ -25,6 +29,7 @@ public enum LineType {
      *  *first lines need to be parsed separately
      *
      *  depth levels in uokik.txt:
+     *  0 -> MainHeader
      *  1 -> Section
      *  2 -> Chapter
      *  3 -> Article
@@ -38,6 +43,7 @@ public enum LineType {
      *
      *
      *  combined depth levels:
+     *  0 -> MainHeader
      *  1 -> Section
      *  2 -> Chapter
      *  3 -> Title
@@ -47,14 +53,15 @@ public enum LineType {
      *  7 -> NumberParenthPoint
      *  8 -> MixedParenthPoint
      *  9 -> LetterParenthPoint
+     *
+     *  + RegularText
      */
 
     @Override
     public String toString() {
         switch (this) {
-
-            case RegularText:
-                return "R";
+            case MainHeader:
+                return "H";
 
             case Section:
                 return "S";
@@ -71,23 +78,76 @@ public enum LineType {
             case NumberDotPoint:
                 return "D";
 
-            case NumberParenthPoint:
-                return "N";
-
-            case LetterParenthPoint:
-                return "L";
-
             case MixedDotPoint:
                 return "P";
+
+            case NumberParenthPoint:
+                return "N";
 
             case MixedParenthPoint:
                 return "M";
 
+            case LetterParenthPoint:
+                return "L";
+
+            case RegularText:
+                return "R";
+
             case Trash:
                 return "X";
 
-            case MainHeader:
-                return "H";
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * gets string's LineType according to its first letter (LineType signature)
+     * @param s - string
+     * @return - string's LineType
+     */
+
+    public static LineType getType (String s) {
+        if(s == null)
+            return null;
+
+        return getTypeFromSignature(s.charAt(0));
+    }
+
+    private static LineType getTypeFromSignature (char signature) {
+        switch (signature) {
+            case 'H':
+                return MainHeader;
+
+            case 'S':
+                return Section;
+
+            case 'C':
+                return Chapter;
+
+            case 'T':
+                return Title;
+
+            case 'A':
+                return Article;
+
+            case 'D':
+                return NumberDotPoint;
+
+            case 'P':
+                return MixedDotPoint;
+
+            case 'N':
+                return NumberParenthPoint;
+
+            case 'M':
+                return MixedParenthPoint;
+
+            case 'L':
+                return LetterParenthPoint;
+
+            case 'R':
+                return RegularText;
 
             default:
                 return null;
@@ -140,12 +200,22 @@ public enum LineType {
     }
 
     /**
+     * gets depth level of a String
+     * @param s - line to get depth level of
+     * @return - depth level
+     */
+
+    public static int getDepthLevel(String s) {
+        return getDepthLevelFromSignature(s.charAt(0));
+    }
+
+    /**
      * gets depth level of a LineType represented by given signature
      * @param signature - character representing LineType
      * @return - depth level of a LineType
      */
 
-    public int getDepthLevelFromSignature (char signature) {
+    public static int getDepthLevelFromSignature (char signature) {
         switch (signature) {
             case 'H':
                 return 0;

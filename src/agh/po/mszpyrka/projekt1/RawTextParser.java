@@ -1,5 +1,7 @@
 package agh.po.mszpyrka.projekt1;
 
+import sun.awt.image.ImageWatched;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -22,6 +24,7 @@ class RawTextParser {
         deleteWordBreaks(list);
         connectTitlesWithChapters(list);
         setMainHeader(list);
+        deleteEmptyLines(list);
         return list;
     }
 
@@ -92,7 +95,7 @@ class RawTextParser {
         for(int i = 0; i < sourceList.size() - 1; i++) {
 
             String str = sourceList.get(i);
-            if(str.charAt(0) == 'R' && str.charAt(str.length() - 1) == '-' && Character.isLetter(str.charAt(str.length() - 2))) {
+            if(LineType.getType(str) == LineType.RegularText && str.charAt(str.length() - 1) == '-' && Character.isLetter(str.charAt(str.length() - 2))) {
 
                 String next = sourceList.get(i + 1);
                 int split = getWhitespacePosition(next, 1);
@@ -135,12 +138,24 @@ class RawTextParser {
         while(sourceList.size() > 0 && !sourceList.getFirst().startsWith("T"))  // firstly removes all contents above the mainHeader
             sourceList.removeFirst();
 
-        int i = 0;
-        String nextLine;
-        while(i < sourceList.size() && (nextLine = sourceList.get(i)).startsWith("T")) {
-            sourceList.set(i, "H" + nextLine.substring(1, nextLine.length()));
-            i++;
+        String header = "H";
+        while(sourceList.size() > 0 && sourceList.getFirst().startsWith("T")) { // removes all Title type lines and merges them into single Header line
+            String tmp = sourceList.removeFirst();
+            header = header + tmp.substring(1, tmp.length()) + " ";
         }
+
+        sourceList.addFirst(header.trim());
+    }
+
+    /**
+     * deletes empty lines from sourceList
+     * @param sourceList
+     */
+
+    private static void deleteEmptyLines (LinkedList<String> sourceList) {
+        for(int i = 0; i < sourceList.size(); i++)
+            while(i < sourceList.size() && sourceList.get(i).length() == 1) // lines that contain only type signature
+                sourceList.remove(i);
     }
 
     /**
