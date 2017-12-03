@@ -1,17 +1,14 @@
 package agh.po.mszpyrka.projekt1;
 
-import javax.sound.sampled.Line;
-
 public enum LineType {
+
     MainHeader,             // H - KONSTYTUCJA RZECZYPOSPOLITEJ POLSKIEJ
     Section,                // S - DZIAŁ XI
     Chapter,                // C - Rozdzial 4.
     Title,                  // T - RZECZPOSPOLITA
     Article,                // A - Art. 123.
-    NumberDotPoint,         // D - 4.
-    MixedDotPoint,          // P - 3b.
-    NumberParenthPoint,     // N - 4)
-    MixedParenthPoint,      // M - 16c)
+    NumberDotPoint,         // D - 4. lub 4a.
+    NumberParenthPoint,     // P - 4) lub 4a)
     LetterParenthPoint,     // L - b)
     RegularText,            // R - regular contents not including any headings
     Trash;                  // X - unimportant lines
@@ -26,7 +23,6 @@ public enum LineType {
      *  4 -> NumberDotPoint
      *  5 -> LetterParenthPoint
      *
-     *  *first lines need to be parsed separately
      *
      *  depth levels in uokik.txt:
      *  0 -> MainHeader
@@ -34,12 +30,8 @@ public enum LineType {
      *  2 -> Chapter
      *  3 -> Article
      *  4 -> NumberDotPoint
-     *  5 -> MixedDotPoint
-     *  6 -> NumberParenthPoint
-     *  7 -> MixedParenthPoint
-     *  8 -> LetterParenthPoint
-     *
-     *  *title "USTAWA" at the beginning shouldn't be treated as proper LineType.Title
+     *  5 -> NumberParenthPoint
+     *  6 -> LetterParenthPoint
      *
      *
      *  combined depth levels:
@@ -49,10 +41,8 @@ public enum LineType {
      *  3 -> Title
      *  4 -> Article
      *  5 -> NumberDotPoint
-     *  6 -> MixedDotPoint
-     *  7 -> NumberParenthPoint
-     *  8 -> MixedParenthPoint
-     *  9 -> LetterParenthPoint
+     *  6 -> NumberParenthPoint
+     *  7 -> LetterParenthPoint
      *
      *  + RegularText
      */
@@ -78,14 +68,8 @@ public enum LineType {
             case NumberDotPoint:
                 return "D";
 
-            case MixedDotPoint:
-                return "P";
-
             case NumberParenthPoint:
-                return "N";
-
-            case MixedParenthPoint:
-                return "M";
+                return "P";
 
             case LetterParenthPoint:
                 return "L";
@@ -135,13 +119,7 @@ public enum LineType {
                 return NumberDotPoint;
 
             case 'P':
-                return MixedDotPoint;
-
-            case 'N':
                 return NumberParenthPoint;
-
-            case 'M':
-                return MixedParenthPoint;
 
             case 'L':
                 return LetterParenthPoint;
@@ -179,23 +157,17 @@ public enum LineType {
             case NumberDotPoint:
                 return 5;
 
-            case MixedDotPoint:
+            case NumberParenthPoint:
                 return 6;
 
-            case NumberParenthPoint:
+            case LetterParenthPoint:
                 return 7;
 
-            case MixedParenthPoint:
+            case RegularText:
                 return 8;
 
-            case LetterParenthPoint:
-                return 9;
-
-            case RegularText:
-                return 10;
-
             default:
-                return 20;
+                return 9;
         }
     }
 
@@ -216,42 +188,6 @@ public enum LineType {
      */
 
     public static int getDepthLevelFromSignature (char signature) {
-        switch (signature) {
-            case 'H':
-                return 0;
-
-            case 'S':
-                return 1;
-
-            case 'C':
-                return 2;
-
-            case 'T':
-                return 3;
-
-            case 'A':
-                return 4;
-
-            case 'D':
-                return 5;
-
-            case 'P':
-                return 6;
-
-            case 'N':
-                return 7;
-
-            case 'M':
-                return 8;
-
-            case 'L':
-                return 9;
-
-            case 'R':
-                return 10;
-
-            default:
-                return 20;
-        }
+        return getTypeFromSignature(signature).getDepthLevel();
     }
 }

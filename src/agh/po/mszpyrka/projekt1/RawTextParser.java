@@ -5,6 +5,7 @@ import sun.awt.image.ImageWatched;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.regex.Pattern;
 
 /**
  * Class used for parsing source text and creating further usable list of lines,
@@ -118,10 +119,10 @@ class RawTextParser {
         for(int i = 1; i < sourceList.size(); i++) {
 
             String str = sourceList.get(i);
-            if(str.charAt(0) == 'T') {
+            if(LineType.getType(str) == LineType.Title) {
 
                 String previous = sourceList.get(i - 1);
-                if(previous.charAt(0) == 'C') {
+                if(LineType.getType(previous) == LineType.Chapter) {
                     str = "R" + str.substring(1, str.length());
                     sourceList.set(i, str);
                 }
@@ -174,13 +175,13 @@ class RawTextParser {
         if(line.length() == 0)
             return null;
 
-        if(line.length() < 2 || line.startsWith("©") || isDate(line))  // line too short or containing unimportant text
-            return LineType.Trash;       // also at least two characters will be needed for some following statements
+        if(line.length() < 2 || line.startsWith("©") || isDate(line))
+            return LineType.Trash;
 
-        if(line.startsWith("DZIAŁ "))       // quite obvious
+        if(line.startsWith("DZIAŁ "))
             return LineType.Section;
 
-        if(line.startsWith("Rozdział "))    // not surprising at all
+        if(line.startsWith("Rozdział "))
             return LineType.Chapter;
 
         if(Character.isUpperCase(line.charAt(0)) && Character.isUpperCase(line.charAt(1)))  // not Section yet capitalised, so must be Title
@@ -189,44 +190,14 @@ class RawTextParser {
         if(line.startsWith("Art. "))        // ...
             return LineType.Article;
 
+        if(Pattern.matches("^\\d+[a-z]?\\. .*", line))   // pattern: (one or more digits) + (one or zero lowerCase letter) + ". "
+            return LineType.NumberDotPoint;
 
-        // only possible headings not covered yet match the pattern: {digit}, {letter}, "." | ")", " "
+        if(Pattern.matches("^\\d+[a-z]?\\) .*", line))   // pattern: (one or more digits) + (one or zero lowerCase letter) + ". "
+            return LineType.NumberParenthPoint;
 
-        // sets pointer to index after last digit
-        int numEnd = 0;
-        while(line.length() > numEnd && Character.isDigit(line.charAt(numEnd)))
-            numEnd++;
-
-        // sets pointer to index after last letter
-        int letterEnd = numEnd;
-        while(line.length() > letterEnd && Character.isLowerCase(line.charAt(letterEnd)))
-            letterEnd++;
-
-
-        // checks if line starts with some (more than zero) digits + letters (zero or more) and ends with ". "
-        if((numEnd > 0) && (line.length() > (letterEnd + 1))
-                && (line.charAt(letterEnd) == '.') && (line.charAt(letterEnd + 1) == ' ')) {
-
-            if(letterEnd == numEnd)
-                return LineType.NumberDotPoint;
-
-            return LineType.MixedDotPoint;
-        }
-
-
-
-        // checks only lines that start with some (maybe zero) digits followed by some (or none) letters, followed by ") "
-
-        if(line.length() > (letterEnd + 1) && line.charAt(letterEnd) == ')' && line.charAt(letterEnd + 1) == ' ') {
-            if(numEnd > 0 && letterEnd == numEnd)
-                return LineType.NumberParenthPoint;
-
-            if(numEnd == 0 && letterEnd > numEnd)
-                return LineType.LetterParenthPoint;
-
-            if(letterEnd > 0)
-                return LineType.MixedParenthPoint;
-        }
+        if(Pattern.matches("^[a-z]\\) .*", line)) // pattern: (one lowerCase letter) + ") "
+            return LineType.LetterParenthPoint;
 
         return LineType.RegularText;
     }
@@ -239,23 +210,7 @@ class RawTextParser {
      */
 
     private static boolean isDate(String line) {
-
-        String dateString = "dddd-dd-dd";
-
-        if(line.length() != dateString.length())
-            return false;
-
-        for(int i = 0; i < dateString.length(); i++) {
-            switch (dateString.charAt(i)) {
-                case 'd':
-                    if(!Character.isDigit(line.charAt(i))) return false;
-                    break;
-                default:
-                    if(line.charAt(i) != '-') return false;
-            }
-        }
-
-        return true;
+        return Pattern.matches("^[0-9]{4}-[0-9]{2}-[0-9]{2}.*", line);
     }
 
 
