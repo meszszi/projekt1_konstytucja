@@ -165,7 +165,7 @@ class RawTextParser {
      * @return heading type that matches the beggining of the line (thou the line may not be heading starter, e.g. "1997)."
      */
 
-    private static LineType getLineType (String line) {
+    public static LineType getLineType (String line) {
 
         if(line == null)
             return null;

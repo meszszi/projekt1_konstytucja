@@ -53,6 +53,15 @@ public class Contents {
         this.subcontents.add(c);
     }
 
+
+    /**
+     * gets subcontents list
+     * @return
+     */
+    public LinkedList<Contents> getSubcontents() {
+        return subcontents;
+    }
+
     public Heading getHeading() {
         return heading;
     }
@@ -64,9 +73,14 @@ public class Contents {
         for(int i = 0; i < this.heading.getType().getDepthLevel(); i++)
             indent = indent + " ";
 
-        String str = indent + this.heading.toString() + "\n";
-        //for(String s : mainContents)
-        //    str = str + indent + s + "\n";
+        String str = indent + this.heading.toString()+" ";
+
+        for(String s : mainContents)
+            str = str + s + "\n" + indent;
+
+        if(!str.endsWith("\n"))
+            str = str + "\n";
+
 
         for(Contents c : subcontents)
             str = str + c.toString();
