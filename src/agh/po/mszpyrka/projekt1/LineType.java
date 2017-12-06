@@ -47,6 +47,7 @@ public enum LineType {
      *  + RegularText
      */
 
+
     @Override
     public String toString() {
         switch (this) {
@@ -85,12 +86,12 @@ public enum LineType {
         }
     }
 
+
     /**
      * gets string's LineType according to its first letter (LineType signature)
      * @param s - string
      * @return - string's LineType
      */
-
     public static LineType getType (String s) {
         if(s == null)
             return null;
@@ -98,6 +99,12 @@ public enum LineType {
         return getTypeFromSignature(s.charAt(0));
     }
 
+
+    /**
+     *
+     * @param signature
+     * @return
+     */
     private static LineType getTypeFromSignature (char signature) {
         switch (signature) {
             case 'H':
@@ -132,11 +139,11 @@ public enum LineType {
         }
     }
 
+
     /**
      * gets depth level of a lineType according to the hierarchy presented in the comment section above
      * @return depthLevel
      */
-
     public int getDepthLevel () {
         switch (this) {
             case MainHeader:
@@ -171,22 +178,22 @@ public enum LineType {
         }
     }
 
+
     /**
      * gets depth level of a String
      * @param s - line to get depth level of
      * @return - depth level
      */
-
     public static int getDepthLevel(String s) {
         return getDepthLevelFromSignature(s.charAt(0));
     }
+
 
     /**
      * gets depth level of a LineType represented by given signature
      * @param signature - character representing LineType
      * @return - depth level of a LineType
      */
-
     public static int getDepthLevelFromSignature (char signature) {
         return getTypeFromSignature(signature).getDepthLevel();
     }

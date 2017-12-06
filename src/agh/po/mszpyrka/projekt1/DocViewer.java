@@ -1,10 +1,16 @@
 package agh.po.mszpyrka.projekt1;
 
-import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
 
 import java.util.LinkedList;
 
 public class DocViewer {
+
+    private final Contents document;
+
+    public DocViewer(Contents document) {
+        this.document = document;
+    }
+
 
     /**
      * searches for document node specified by given path
@@ -12,10 +18,9 @@ public class DocViewer {
      * @param startNode - Contents node to begin searching with
      * @return - Contents node that matches specified path, null if no such is found
      */
+    public LinkedList<Contents> findMatchingNode(String[] path, Contents startNode, int depthIndex) {
 
-    public LinkedList<Contents> findContentsNode(String[] path, Contents startNode, int depthIndex) {
-
-        LinkedList<Contents> list = new LinkedList<Contents>();
+        LinkedList<Contents> list = new LinkedList<>();
 
         if(depthIndex >= path.length) {
             list.add(startNode);
@@ -23,10 +28,10 @@ public class DocViewer {
         }
 
         if(startNode.getHeading().matches(path[depthIndex]))
-            return findContentsNode(path, startNode, depthIndex + 1);
+            return findMatchingNode(path, startNode, depthIndex + 1);
 
         for(Contents c : startNode.getSubcontents()) {
-            LinkedList<Contents> tmp = findContentsNode(path, c, depthIndex);
+            LinkedList<Contents> tmp = findMatchingNode(path, c, depthIndex);
             list.addAll(tmp);
         }
 

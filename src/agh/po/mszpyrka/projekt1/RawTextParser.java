@@ -1,25 +1,24 @@
 package agh.po.mszpyrka.projekt1;
 
-import sun.awt.image.ImageWatched;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.regex.Pattern;
 
+
 /**
  * Class used for parsing source text and creating further usable list of lines,
  * each line is marked with proper LineType sign at the beginning.
  */
-
 class RawTextParser {
+
 
     /**
      * converts raw text from input file to list of ready-to-use lines for further document composing
      * @param reader - BufferedReader reading from input file
      * @return - awesome list of text lines divided into different categories (LineType values)
      */
-
     static LinkedList<String> parseRawText(BufferedReader reader) {
         LinkedList<String> list = initialParse(reader);
         deleteWordBreaks(list);
@@ -29,12 +28,12 @@ class RawTextParser {
         return list;
     }
 
+
     /**
      * converts input file to list of strings, each containing max. 1 heading, gets rid of trash lines
      * @param reader - BufferedReader reading from input txt file
      * @return  LinkedList of strings, each one containing lineType signature at the beginning
      */
-
     private static LinkedList<String> initialParse(BufferedReader reader) {
 
         LinkedList<String> result = new LinkedList<>();
@@ -86,11 +85,11 @@ class RawTextParser {
         return result;
     }
 
+
     /**
      * deletes word-breaking hyphens and connects words from consecutive RegularText type lines
      * @param sourceList - list of lines created with initialParse method
      */
-
     private static void deleteWordBreaks (LinkedList<String> sourceList) {
 
         for(int i = 0; i < sourceList.size() - 1; i++) {
@@ -114,7 +113,6 @@ class RawTextParser {
      * searches for Title type lines after Chapter type lines, if one is found it's type is changed to RegularText to connect it with Chapter
      * @param sourceList - list of lines parsed with initialParse method
      */
-
     private static void connectTitlesWithChapters (LinkedList<String> sourceList) {
         for(int i = 1; i < sourceList.size(); i++) {
 
@@ -130,11 +128,11 @@ class RawTextParser {
         }
     }
 
+
     /**
      * sets firts capitalised lines a MainHeader lineType
      * @param sourceList - list of String parsed with initialParse method
      */
-
     private static void setMainHeader (LinkedList<String> sourceList) {
         while(sourceList.size() > 0 && !sourceList.getFirst().startsWith("T"))  // firstly removes all contents above the mainHeader
             sourceList.removeFirst();
@@ -148,24 +146,24 @@ class RawTextParser {
         sourceList.addFirst(header.trim());
     }
 
+
     /**
      * deletes empty lines from sourceList
      * @param sourceList
      */
-
     private static void deleteEmptyLines (LinkedList<String> sourceList) {
         for(int i = 0; i < sourceList.size(); i++)
             while(i < sourceList.size() && sourceList.get(i).length() == 1) // lines that contain only type signature
                 sourceList.remove(i);
     }
 
+
     /**
      * tests whether a line is a potential heading beginning
      * @param line - single line from input file
      * @return heading type that matches the beggining of the line (thou the line may not be heading starter, e.g. "1997)."
      */
-
-    public static LineType getLineType (String line) {
+    private static LineType getLineType (String line) {
 
         if(line == null)
             return null;
@@ -208,7 +206,6 @@ class RawTextParser {
      * @param line - string to check
      * @return true only if date pattern is matched
      */
-
     private static boolean isDate(String line) {
         return Pattern.matches("^[0-9]{4}-[0-9]{2}-[0-9]{2}.*", line);
     }
@@ -220,7 +217,6 @@ class RawTextParser {
      * @param n - number of whitespaces
      * @return - index of nth white space position
      */
-
     private static int getWhitespacePosition(String string, int n) {
 
         int i;
