@@ -48,6 +48,32 @@ public class Contents {
 
 
     /**
+     *
+     * @param c
+     * @return
+     */
+    public boolean isParentOf(Contents c) {
+        return c.isChildOf(this);
+    }
+
+
+    /**
+     *
+     * @param c
+     * @return
+     */
+    public boolean isChildOf(Contents c) {
+        if(this.parent == c || c == this)
+            return true;
+
+        if(this.parent == this)
+            return false;
+
+        return this.parent.isChildOf(c);
+    }
+
+
+    /**
      * adds next line to mainContents
      * @param s
      */
@@ -67,7 +93,7 @@ public class Contents {
 
     /**
      * gets subcontents list
-     * @return
+     * @return - subcontents
      */
     public LinkedList<Contents> getSubcontents() {
         return this.subcontents;
@@ -76,10 +102,19 @@ public class Contents {
 
     /**
      * gets heading
-     * @return
+     * @return - heading
      */
     public Heading getHeading() {
         return this.heading;
+    }
+
+
+    /**
+     * gets parent
+     * @return - parent
+     */
+    public Contents getParent() {
+        return this.parent;
     }
 
 
@@ -128,9 +163,14 @@ public class Contents {
      */
     public String getPathString() {
         if(this.parent == this)
-            return this.heading.toString();
+            return "";
 
-        return this.parent.getPathString() + ", " + this.heading.toString();
+        String ans = this.parent.getPathString();
+
+        if(ans.length() > 0)
+            ans += ", ";
+
+        return ans + this.parent.heading.toString();
     }
 
 

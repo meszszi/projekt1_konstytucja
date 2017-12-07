@@ -8,7 +8,7 @@ public class MainSystem {
 
         try (BufferedReader reader = new BufferedReader(
                         new FileReader(
-                                new File(args[0] + "uokik.txt")))){
+                                new File(args[0] + "konstytucja.txt")))){
 
             int mode = CommandLineParser.getMode(args);
 
@@ -19,22 +19,17 @@ public class MainSystem {
 
             //System.out.println(document.getTableOfContents(0, 3));
             System.out.println(document.getFullContents(0));
-            String[] path = {"DZIAŁ II", "Art. 10.", "4.", "3)"};
+            String[] path1 = {"art. 10."};
+            String[] path2 = {"art. 50."};
             DocViewer d = new DocViewer(document);
-            LinkedList<Contents> xd = d.findMatchingNode(path, document, 0);
-
-            if(xd.size() == 0) System.out.println("nie ma takiego");
-            else
-                for (Contents c : xd) {
-                    System.out.println("\n" + c.getPathString());
-                    System.out.println("\n"+c.getFullContents(0));
-                }
+            //System.out.println(d.showContetns(path1, mode));
+            //System.out.println(d.showRange(path1, path2, mode));
 
         }
-        catch (IOException ex) {
-            System.out.println("lol"); //TODO
-            //throw ex;
+        catch (Exception ex) {
+            System.out.println(ex.getMessage()); //TODO
         }
+
 
 
 

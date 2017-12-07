@@ -21,7 +21,7 @@ public class CommandLineParser {
     public static int getMode(String[] commandLineArgs) throws IOException {
 
         if(commandLineArgs.length < 2) {
-            throw new IOException("brakuje argumentow");
+            return 0;
         }
 
         switch(commandLineArgs[1]) {

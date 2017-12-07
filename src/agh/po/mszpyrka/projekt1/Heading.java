@@ -34,6 +34,6 @@ public class Heading {
      * @return
      */
     public boolean matches(String h) {
-        return h.startsWith(this.title.trim());
+        return h.toUpperCase().equals(this.title.trim().toUpperCase());
     }
 }
