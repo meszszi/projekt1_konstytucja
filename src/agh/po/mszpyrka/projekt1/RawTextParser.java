@@ -1,6 +1,5 @@
 package agh.po.mszpyrka.projekt1;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -11,20 +10,19 @@ import java.util.regex.Pattern;
  * Class used for parsing source text and creating further usable list of lines,
  * each line is marked with proper LineType sign at the beginning.
  */
-class RawTextParser {
-
-
+public class RawTextParser {
     /**
      * converts raw text from input file to list of ready-to-use lines for further document composing
      * @param reader - BufferedReader reading from input file
      * @return - awesome list of text lines divided into different categories (LineType values)
      */
-    static LinkedList<String> parseRawText(BufferedReader reader) {
-        LinkedList<String> list = initialParse(reader);
+    public LinkedList<DocLine> parseFromReader(BufferedReader reader) {
+        LinkedList<DocLine> list = initialParse(reader);
         deleteWordBreaks(list);
         connectTitlesWithChapters(list);
         setMainHeader(list);
         deleteEmptyLines(list);
+
         return list;
     }
 
@@ -34,9 +32,9 @@ class RawTextParser {
      * @param reader - BufferedReader reading from input txt file
      * @return  LinkedList of strings, each one containing lineType signature at the beginning
      */
-    private static LinkedList<String> initialParse(BufferedReader reader) {
+    private LinkedList<DocLine> initialParse(BufferedReader reader) {
 
-        LinkedList<String> result = new LinkedList<>();
+        LinkedList<DocLine> result = new LinkedList<>();
 
         String nextLine;
         try {
@@ -44,22 +42,20 @@ class RawTextParser {
 
                 LineType lineType;
 
-                while ((lineType = RawTextParser.getLineType(nextLine)) != null) {
-
-                    String signature = lineType.toString();
+                while ((lineType = this.getLineType(nextLine)) != null) {
 
                     nextLine = nextLine.trim();
 
-                    // RegularText and Title lines needn't being splitted
+                    // RegularText and Title lines don't need to be split
                     if(lineType == LineType.RegularText || lineType == LineType.Title) {
-                        result.add((signature + nextLine).trim());
+                        result.add(new DocLine(lineType, nextLine));
                         nextLine = null;
                     }
 
                     // Section, Chapter and Article contain heading name that ends at second white space and may be followed by another lineType
                     else if(lineType == LineType.Section || lineType == LineType.Chapter || lineType == LineType.Article) {
                         int split = getWhitespacePosition(nextLine, 2);
-                        result.add((signature + nextLine.substring(0, split)).trim());
+                        result.add(new DocLine(lineType, nextLine.substring(0, split)));
                         nextLine = nextLine.substring(split, nextLine.length()).trim();
                     }
 
@@ -71,7 +67,7 @@ class RawTextParser {
                     // other types (all point types) end their name after first whitespace and may be followed by another lineType
                     else {
                         int split = getWhitespacePosition(nextLine, 1);
-                        result.add((signature + nextLine.substring(0, split)).trim());
+                        result.add(new DocLine(lineType, nextLine.substring(0, split).trim()));
                         nextLine = nextLine.substring(split, nextLine.length()).trim();
                     }
 
@@ -90,60 +86,52 @@ class RawTextParser {
      * deletes word-breaking hyphens and connects words from consecutive RegularText type lines
      * @param sourceList - list of lines created with initialParse method
      */
-    private static void deleteWordBreaks (LinkedList<String> sourceList) {
+    private void deleteWordBreaks (LinkedList<DocLine> sourceList) {
 
         for(int i = 0; i < sourceList.size() - 1; i++) {
 
-            String str = sourceList.get(i);
-            if(LineType.getType(str) == LineType.RegularText && str.charAt(str.length() - 1) == '-' && Character.isLetter(str.charAt(str.length() - 2))) {
+            DocLine line = sourceList.get(i);
+            if(line.getType() == LineType.RegularText && Pattern.matches(".*\\p{IsAlphabetic}-$", line.getContents())) {
+                DocLine nextLine = sourceList.get(i + 1);
+                int split = getWhitespacePosition(nextLine.getContents(), 1);
 
-                String next = sourceList.get(i + 1);
-                int split = getWhitespacePosition(next, 1);
-                str = str.substring(0, str.length()-1) + next.substring(1, split).trim();
-                next = next.charAt(0) + (next.substring(split, next.length())).trim();
+                line.setContents(line.getContents().substring(0, line.getContents().length() - 1)
+                        + nextLine.getContents().substring(0, split));
 
-                sourceList.set(i, str);
-                sourceList.set(i + 1, next);
+                nextLine.setContents(nextLine.getContents().substring(split, nextLine.getContents().length()));
             }
         }
     }
 
 
     /**
-     * searches for Title type lines after Chapter type lines, if one is found it's type is changed to RegularText to connect it with Chapter
+     * searches for Title type lines after Chapter type lines, if one is found it's type is changed to RegularText
      * @param sourceList - list of lines parsed with initialParse method
      */
-    private static void connectTitlesWithChapters (LinkedList<String> sourceList) {
+    private void connectTitlesWithChapters (LinkedList<DocLine> sourceList) {
         for(int i = 1; i < sourceList.size(); i++) {
 
-            String str = sourceList.get(i);
-            if(LineType.getType(str) == LineType.Title) {
-
-                String previous = sourceList.get(i - 1);
-                if(LineType.getType(previous) == LineType.Chapter) {
-                    str = "R" + str.substring(1, str.length());
-                    sourceList.set(i, str);
-                }
-            }
+            if(sourceList.get(i).getType() == LineType.Title && sourceList.get(i - 1).getType() == LineType.Chapter)
+                sourceList.get(i).setType(LineType.RegularText);
         }
     }
 
 
     /**
-     * sets firts capitalised lines a MainHeader lineType
-     * @param sourceList - list of String parsed with initialParse method
+     * creates MainHeader from document opening title-type lines
+     * @param sourceList - list of DocLines parsed with initialParse method
      */
-    private static void setMainHeader (LinkedList<String> sourceList) {
-        while(sourceList.size() > 0 && !sourceList.getFirst().startsWith("T"))  // firstly removes all contents above the mainHeader
+    private void setMainHeader (LinkedList<DocLine> sourceList) {
+        while(sourceList.size() > 0 && !(sourceList.getFirst().getType() == LineType.Title))  // firstly removes all contents above the first Title line
             sourceList.removeFirst();
 
-        String header = "H";
-        while(sourceList.size() > 0 && sourceList.getFirst().startsWith("T")) { // removes all Title type lines and merges them into single Header line
-            String tmp = sourceList.removeFirst();
-            header = header + tmp.substring(1, tmp.length()) + " ";
+        DocLine header = new DocLine(LineType.MainHeader, "");
+        while(sourceList.size() > 0 && sourceList.getFirst().getType() == LineType.Title) { // removes all Title type lines and merges them into single Header line
+            DocLine tmp = sourceList.removeFirst();
+            header.setContents(header.getContents() + " " + tmp.getContents());
         }
 
-        sourceList.addFirst(header.trim());
+        sourceList.addFirst(header);
     }
 
 
@@ -151,9 +139,9 @@ class RawTextParser {
      * deletes empty lines from sourceList
      * @param sourceList
      */
-    private static void deleteEmptyLines (LinkedList<String> sourceList) {
+    private void deleteEmptyLines (LinkedList<DocLine> sourceList) {
         for(int i = 0; i < sourceList.size(); i++)
-            while(i < sourceList.size() && sourceList.get(i).length() == 1) // lines that contain only type signature
+            while(i < sourceList.size() && sourceList.get(i).isEmpty()) // lines that contain only type signature
                 sourceList.remove(i);
     }
 
@@ -163,7 +151,7 @@ class RawTextParser {
      * @param line - single line from input file
      * @return heading type that matches the beggining of the line (thou the line may not be heading starter, e.g. "1997)."
      */
-    private static LineType getLineType (String line) {
+    private LineType getLineType (String line) {
 
         if(line == null)
             return null;
@@ -206,7 +194,7 @@ class RawTextParser {
      * @param line - string to check
      * @return true only if date pattern is matched
      */
-    private static boolean isDate(String line) {
+    private boolean isDate(String line) {
         return Pattern.matches("^[0-9]{4}-[0-9]{2}-[0-9]{2}.*", line);
     }
 
@@ -217,7 +205,7 @@ class RawTextParser {
      * @param n - number of whitespaces
      * @return - index of nth white space position
      */
-    private static int getWhitespacePosition(String string, int n) {
+    private int getWhitespacePosition(String string, int n) {
 
         int i;
         for(i = 0; i < string.length(); i++) {
@@ -226,4 +214,7 @@ class RawTextParser {
         }
         return i;
     }
+
+
+    //private static LinkedList<String> ()
 }

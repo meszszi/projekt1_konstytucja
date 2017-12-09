@@ -2,6 +2,7 @@ package agh.po.mszpyrka.projekt1;
 
 import java.io.*;
 import java.util.LinkedList;
+import java.util.regex.Pattern;
 
 public class MainSystem {
     public static void main(String[] args) {
@@ -12,17 +13,20 @@ public class MainSystem {
 
             int mode = CommandLineParser.getMode(args);
 
-            LinkedList<String> list = RawTextParser.parseRawText(reader);
+            //System.out.println(Pattern.matches("\\p{IsAlphabetic}", "5"));
+            mode = 0;
+            RawTextParser sourceParser = new RawTextParser();
+            LinkedList<DocLine> list = sourceParser.parseFromReader(reader);
 
             Contents document = new Contents(list.getFirst());
             document.parse(list, 0);
 
             //System.out.println(document.getTableOfContents(0, 3));
-            System.out.println(document.getFullContents(0));
-            String[] path1 = {"art. 10."};
-            String[] path2 = {"art. 50."};
+            //System.out.println(document.getFullContents(0));
+            String[] path1 = {};
+            String[] path2 = {"art. 51."};
             DocViewer d = new DocViewer(document);
-            //System.out.println(d.showContetns(path1, mode));
+            System.out.println(d.showContetns(path1, mode));
             //System.out.println(d.showRange(path1, path2, mode));
 
         }

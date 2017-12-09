@@ -8,19 +8,20 @@ public class Contents {
     private LinkedList<String> mainContents;
     private LinkedList<Contents> subcontents;
 
-    public Contents(String headingLine) {
+    public Contents(DocLine line) {
         mainContents = new LinkedList<>();
         subcontents = new LinkedList<>();
-        this.heading = new Heading(headingLine);
+        this.heading = new Heading(line);
         this.parent = this;
     }
 
-    public Contents(Contents parent, String headingLine) {
+    public Contents(Contents parent, DocLine line) {
         mainContents = new LinkedList<>();
         subcontents = new LinkedList<>();
-        this.heading = new Heading(headingLine);
+        this.heading = new Heading(line);
         this.parent = parent;
     }
+
 
     /**
      * parses sourceList into Contents type object hierarchy
@@ -28,16 +29,16 @@ public class Contents {
      * @param begin - index of the element in sourceList to start parsing with
      * @return - index of the sourceList element that the parsing ended on (points to first line not parsed yet)
      */
-    public int parse(LinkedList<String> sourceList, int begin) {
+    public int parse(LinkedList<DocLine> sourceList, int begin) {
 
         int iterator = begin + 1;
 
-        while(iterator < sourceList.size() && LineType.getType(sourceList.get(iterator)) == LineType.RegularText) {
-            this.extendMainContents(sourceList.get(iterator));
+        while(iterator < sourceList.size() && sourceList.get(iterator).getType() == LineType.RegularText) {
+            this.extendMainContents(sourceList.get(iterator).getContents());
             iterator++;
         }
 
-        while(iterator < sourceList.size() && this.heading.getType().getDepthLevel() < LineType.getDepthLevel(sourceList.get(iterator))) {
+        while(iterator < sourceList.size() && this.heading.getType().getDepthLevel() < sourceList.get(iterator).getType().getDepthLevel()) {
             Contents subc = new Contents(this, sourceList.get(iterator));
             iterator = subc.parse(sourceList, iterator);
             this.extendSubcontents(subc);
@@ -78,7 +79,7 @@ public class Contents {
      * @param s
      */
     private void extendMainContents(String s) {
-        this.mainContents.add(s.substring(1, s.length()));
+        this.mainContents.add(s);
     }
 
 
