@@ -2,16 +2,16 @@ package agh.po.mszpyrka.projekt1;
 
 public enum LineType {
 
-    MainHeader,             // H - KONSTYTUCJA RZECZYPOSPOLITEJ POLSKIEJ
-    Section,                // S - DZIAŁ XI
-    Chapter,                // C - Rozdzial 4.
-    Title,                  // T - RZECZPOSPOLITA
-    Article,                // A - Art. 123.
-    NumberDotPoint,         // D - 4. lub 4a.
-    NumberParenthPoint,     // P - 4) lub 4a)
-    LetterParenthPoint,     // L - b)
-    RegularText,            // R - regular contents not including any headings
-    Trash;                  // X - unimportant lines
+    MainHeader,             // KONSTYTUCJA RZECZYPOSPOLITEJ POLSKIEJ
+    Section,                // DZIAŁ XI
+    Chapter,                // Rozdzial 4.
+    Title,                  // RZECZPOSPOLITA
+    Article,                // Art. 123.
+    NumberDotPoint,         // 4. lub 4a.
+    NumberParenthPoint,     // 4) or 4a)
+    LetterParenthPoint,     // b)
+    RegularText,            // regular contents not including any headings
+    Trash;                  // unimportant lines
 
 
     /*
@@ -83,6 +83,41 @@ public enum LineType {
 
             default:
                 return 9;
+        }
+    }
+
+    @Override
+    public String toString() {
+        switch (this) {
+            case MainHeader:
+                return "H";
+
+            case Section:
+                return "S";
+
+            case Chapter:
+                return "C";
+
+            case Title:
+                return "T";
+
+            case Article:
+                return "A";
+
+            case NumberDotPoint:
+                return "D";
+
+            case NumberParenthPoint:
+                return "P";
+
+            case LetterParenthPoint:
+                return "L";
+
+            case RegularText:
+                return "R";
+
+            default:
+                return "X";
         }
     }
 }

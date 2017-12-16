@@ -1,5 +1,8 @@
 package agh.po.mszpyrka.projekt1;
 
+
+import sun.awt.image.ImageWatched;
+
 import java.util.LinkedList;
 
 public class Contents {
@@ -20,6 +23,33 @@ public class Contents {
         subcontents = new LinkedList<>();
         this.heading = new Heading(line);
         this.parent = parent;
+    }
+
+
+    /**
+     * gets subcontents list
+     * @return - subcontents
+     */
+    public LinkedList<Contents> getSubcontents() {
+        return this.subcontents;
+    }
+
+
+    /**
+     * gets heading
+     * @return - heading
+     */
+    public Heading getHeading() {
+        return this.heading;
+    }
+
+
+    /**
+     * gets parent
+     * @return - parent
+     */
+    public Contents getParent() {
+        return this.parent;
     }
 
 
@@ -49,17 +79,7 @@ public class Contents {
 
 
     /**
-     *
-     * @param c
-     * @return
-     */
-    public boolean isParentOf(Contents c) {
-        return c.isChildOf(this);
-    }
-
-
-    /**
-     *
+     * checks if given node lays on path from 'this' to root node in Contents tree
      * @param c
      * @return
      */
@@ -76,7 +96,7 @@ public class Contents {
 
     /**
      * adds next line to mainContents
-     * @param s
+     * @param s - line to add to mainContents list
      */
     private void extendMainContents(String s) {
         this.mainContents.add(s);
@@ -85,37 +105,10 @@ public class Contents {
 
     /**
      * adds Contents object to subcontents list
-     * @param c
+     * @param c - node to add to subcontents list
      */
     private void extendSubcontents(Contents c) {
         this.subcontents.add(c);
-    }
-
-
-    /**
-     * gets subcontents list
-     * @return - subcontents
-     */
-    public LinkedList<Contents> getSubcontents() {
-        return this.subcontents;
-    }
-
-
-    /**
-     * gets heading
-     * @return - heading
-     */
-    public Heading getHeading() {
-        return this.heading;
-    }
-
-
-    /**
-     * gets parent
-     * @return - parent
-     */
-    public Contents getParent() {
-        return this.parent;
     }
 
 
