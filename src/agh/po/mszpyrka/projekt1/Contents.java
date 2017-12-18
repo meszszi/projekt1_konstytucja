@@ -141,67 +141,22 @@ public class Contents {
     }
 
 
-
     /**
-     * returns only the first line of contents
-     * @param indent - number of white spaces that line indent be followed by
-     * @return - properly formatted line
-
-    private String getHighlights(int indent) {
-        String ans = getIndent(indent) + this.heading.toString();
+     * formats node's contents for table of contents mode (heading + first line of mainContents is selected)
+     * @return
+     */
+    public String getHighlights() {
+        String ans = this.heading.toString();
 
         if(this.heading.getType() == LineType.MainHeader) // doesn't insclude any text after heading in case of MainHeader
             return ans;
 
         if(this.mainContents.size() > 0)                  // if there are any mainContents -> includes the first line
-            ans += " : " + this.mainContents.getFirst();
+            ans += " ~ " + this.mainContents.getFirst();
 
         if(this.mainContents.size() > 1)                  // if there is more -> adds "(...)"
             ans += "(...)";
 
         return ans;
-    }
-
-
-    /**
-     * gets whole node's table of contents (each heading is presented in highlight style)
-     * @param indent
-     * @return
-
-    public String getTableOfContents(int indent, int maxDepth) {
-
-        if(maxDepth < this.heading.getType().getDepthLevel()) return "";
-
-        String tableOfContents = this.getHighlights(indent) + "\n";
-
-        for(Contents c : this.subcontents)
-            tableOfContents += c.getTableOfContents(indent + 1, maxDepth);
-
-        return tableOfContents;
-    }
-
-
-    /**
-     * gets node's full contents (including all subConents)
-     * @param indent
-     * @return
-     */
-    public String getFullContents(int indent) {
-
-        String fullContents = "";//this.toString(indent);
-
-        if(this.heading.getType() == LineType.Chapter
-                || this.heading.getType() == LineType.Section
-                || this.heading.getType() == LineType.MainHeader
-                || this.heading.getType() == LineType.Title)
-            fullContents += "\n";
-
-        for(Contents c : this.subcontents)
-            fullContents += c.getFullContents(indent + 1);
-
-        if(this.heading.getType() == LineType.Article)
-            fullContents += "\n";
-
-        return fullContents;
     }
 }

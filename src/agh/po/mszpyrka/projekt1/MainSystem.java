@@ -20,14 +20,10 @@ public class MainSystem {
             CommandLineParser cliParser = new CommandLineParser(args);
             String[][] paths = cliParser.getAllPaths();
 
-            LinkedList<Contents> list2 = d.getRange(paths[0], paths[1]);
+            LinkedList<Contents> list2 = d.getRange(paths[0], paths[0]);
             //System.out.println(d.showContetns(paths[0], cliParser.getMode()));
             DocPrinter printer = new DocPrinter();
-            LinkedList<String> st = printer.showFullContents(list2);
-
-            for(String s : st)
-                System.out.println(s);
-
+            System.out.println(DocPrinter.showContents(list2, false));
         }
         catch (Exception ex) {
             System.out.println(ex.getMessage()); //TODO

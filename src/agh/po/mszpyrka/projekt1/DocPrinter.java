@@ -7,37 +7,43 @@ import java.util.LinkedList;
  */
 public class DocPrinter {
 
-    private final String defaultIndent = "  ";
+    //TODO - add limit to table of contents mode depth
 
+    private static final String defaultIndent = "  ";
 
     /**
-     *
-     * @param sourceList
-     * @return
+     * converts text from list of Contents nodes to readable String format
+     * @param sourceList - input list of nodes
+     * @return - properly formatted String
      */
-    public LinkedList<String> showFullContents(LinkedList<Contents> sourceList) {
+    public static String showContents(LinkedList<Contents> sourceList, boolean tableOfContentsMode) {
 
-        LinkedList<String> result = new LinkedList<>();
+        LinkedList<String> resultList = new LinkedList<>();
 
         boolean startIndent = true;
-        if(sourceList.getFirst().getParent() == sourceList.getFirst())
+        if(sourceList.getFirst().getParent() == sourceList.getFirst()) // start indent is not necessary if whole document is printed
             startIndent = false;
 
-        result.add(this.getPathToRoot(sourceList.getFirst()));
-        result.add("");
-        result.addAll(this.formatFullContents(sourceList, startIndent));
+        resultList.add(getPathToRoot(sourceList.getFirst()));
+        resultList.add("");
+        resultList.addAll(formatContents(sourceList, startIndent, tableOfContentsMode));
+        deleteAdditionalEmptyLines(resultList);
 
-        return result;
+        String resultStr = "";
+        for(String s : resultList)
+            resultStr += s + "\n";
+
+        return resultStr;
     }
 
 
     /**
-     * converts Contents list to String list with proper indents
+     * converts contents list to table of contents with proper indents
      * @param sourceList - list of Contents nodes
-     * @param startIndent - true only for outer function calls, makes indent for few first nodes from sourceList
-     * @return - list of Strings with proper text format
+     * @param startIndent - if true, additional indent is set to formatted node's contents
+     * @return - properly formatted table of contents
      */
-    private LinkedList<String> formatFullContents(LinkedList<Contents> sourceList, boolean startIndent) {
+    private static LinkedList<String> formatContents(LinkedList<Contents> sourceList, boolean startIndent, boolean tableOfContentsMode) {
 
         LinkedList<String> result = new LinkedList<>();
 
@@ -47,36 +53,46 @@ public class DocPrinter {
 
             boolean needsIndent = false;
 
+            // if the depth level of node is greater then the previous one from source list, it should be formatted with bigger indent
             if(i > 0 && c.getHeading().getType().getDepthLevel() > sourceList.get(i - 1).getHeading().getType().getDepthLevel()) {
 
-                result.add(this.getPathFromLevel(c, sourceList.get(i - 1).getHeading().getType().getDepthLevel()));
+                result.add(getPathFromLevel(c, sourceList.get(i - 1).getHeading().getType().getDepthLevel()));
                 needsIndent = true;
             }
-
-            if(i > 0 && c.getHeading().getType().getDepthLevel() != sourceList.get(i - 1).getHeading().getType().getDepthLevel())
-                startIndent = false;
-
-
-            LinkedList<String> mainContents = (c.mainContentsToStringList());
 
             String properIndent = "";
             if(needsIndent || startIndent)
                 properIndent = "  ";
 
-            for(int j = 0; j < mainContents.size(); j++)
-                mainContents.set(j, properIndent + mainContents.get(j));
+            if(tableOfContentsMode) {
 
-            result.addAll(mainContents);
+                String highlights = properIndent + c.getHighlights();
+                result.add(highlights);
+            }
+
+            else {
+
+                LinkedList<String> mainContents = (c.mainContentsToStringList());
+
+                for(int j = 0; j < mainContents.size(); j++)
+                    mainContents.set(j, properIndent + mainContents.get(j));
+
+                result.addAll(mainContents);
+            }
+
 
             if(c.getHeading().getType().getDepthLevel() <= 3)
                 result.add("");
 
-            LinkedList<String> childrenContents = this.formatFullContents(c.getSubcontents(), false);
+            LinkedList<String> childrenContents = formatContents(c.getSubcontents(), false, tableOfContentsMode);
+
+            // all contents from children nodes should have greater indent
             for(int j = 0; j < childrenContents.size(); j++)
                 childrenContents.set(j, properIndent + defaultIndent + childrenContents.get(j));
 
             result.addAll(childrenContents);
 
+            // empty line for better readability is added for all Sections, Chapters and Titles, as well as for nodes with many children
             if(c.getHeading().getType().getDepthLevel() <= 4 || c.getSubcontents().size() > 0)
                 result.add("");
         }
@@ -90,7 +106,7 @@ public class DocPrinter {
      * @param c - node
      * @return - path in String format
      */
-    private String getPathToRoot(Contents c) {
+    private static String getPathToRoot(Contents c) {
         String ans = "";
         while(c != c.getParent()) {
             ans = c.getParent().getHeading().toString() + ", " + ans;
@@ -110,7 +126,7 @@ public class DocPrinter {
      * @param level - depth level from which the path starts
      * @return - properly formatted String representing the path
      */
-    private String getPathFromLevel(Contents c, int level) {
+    private static String getPathFromLevel(Contents c, int level) {
         String ans = "";
         while(c.getParent().getHeading().getType().getDepthLevel() >= level) {
             ans = c.getParent().getHeading().toString() + ", " + ans;
@@ -125,82 +141,19 @@ public class DocPrinter {
 
 
     /**
-     *
-     * @param path
-     * @param mode
-     * @return
-     * @throws IOException
-     /
-    public String showContetns(String[] path, int mode) throws Exception{
-        Contents node = getNode(path);
-        String pathString = node.getPathString();
-        if(pathString.length() > 0)
-            pathString += ":\n";
+     * processes list of Strings in a way that no two consecutive empty lines are left
+     * @param list - list of Strings to process
+     */
+    private static void deleteAdditionalEmptyLines(LinkedList<String> list) {
 
-        return pathString + getNodeContents(node, mode);
+        while(list.getFirst().trim().length() == 0)
+            list.removeFirst();
+
+        while(list.getLast().trim().length() == 0)
+            list.removeLast();
+
+        for(int i = 1; i < list.size(); i++)
+            while(list.get(i).trim().length() == 0 && list.get(i - 1).trim().length() == 0)
+                list.remove(i);
     }
-
-
-    /**
-     *
-     * @param pathBegin
-     * @param pathEnd
-     * @param mode
-     * @return
-     * @throws Exception
-     /
-    public String showRange(String[] pathBegin, String[] pathEnd, int mode) throws Exception{
-        Contents startNode = getNode(pathBegin);
-        Contents endNode = getNode(pathEnd);
-        if(!areInOrder(startNode, endNode))
-            throw new Exception("range bounds reversed");
-
-        String ans = startNode.getPathString();
-
-        if(ans.length() > 0)
-            ans += ":\n";
-
-        while(startNode != endNode) {
-            if(endNode.isChildOf(startNode))
-                startNode = startNode.getSubcontents().getFirst();
-
-            else {
-                ans += getNodeContents(startNode, mode);
-                startNode = getUpperNext(startNode);
-            }
-        }
-
-        ans += getNodeContents(startNode, mode);
-
-        return ans;
-    }
-
-    /**
-     *
-     * @param node
-     * @param mode
-     * @return
-     /
-    private String getNodeContents(Contents node, int mode) {
-
-        if(mode == 0)
-            return node.getFullContents(0);
-
-        int maxDepthLevel;
-
-        LineType line = node.getHeading().getType();
-
-        if(line == LineType.MainHeader)
-            maxDepthLevel = 3;
-
-        else if(line == LineType.Chapter || line == LineType.Section || line == LineType.Title)
-            maxDepthLevel = 4;
-
-        else
-            maxDepthLevel = 10;
-
-        return node.getTableOfContents(0, maxDepthLevel);
-    }
-
-    */
 }
