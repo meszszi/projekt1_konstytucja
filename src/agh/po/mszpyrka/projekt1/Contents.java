@@ -1,8 +1,5 @@
 package agh.po.mszpyrka.projekt1;
 
-
-import sun.awt.image.ImageWatched;
-
 import java.util.LinkedList;
 
 public class Contents {
@@ -114,65 +111,42 @@ public class Contents {
 
     /**
      * returns properly formatted text for single Contents node (doesn't include any subContents)
-     * @param indent
-     * @return
+     * @return String array, each element containing single line
      */
-    private String toString(int indent) {
+    public LinkedList<String> mainContentsToStringList() {
 
-        String strIndent = getIndent(indent);
+        LinkedList<String> result = new LinkedList<>();
 
-        String ans = strIndent + this.heading.toString();
+        if(this.heading.getType() == LineType.MainHeader || this.mainContents.size() == 0) {
+            result.add(this.heading.toString());
+            result.addAll(this.mainContents);
 
-        if(this.heading.getType() == LineType.MainHeader) {
-            for(String s : mainContents)
-                ans += "\n" + strIndent + s;
-
-            return ans + "\n";
+            return result;
         }
 
-        if(this.mainContents.size() > 0) {
+        String tmp = "";
 
-            if(this.heading.getType() == LineType.Chapter)
-                ans += ":";
+        if(this.heading.getType() == LineType.Chapter)
+            tmp = ":";
 
-            else if(this.heading.getType() == LineType.Section)
-                ans += ")";
+        else if(this.heading.getType() == LineType.Section)
+            tmp = ")";
 
-            ans += " " + this.mainContents.getFirst() + "\n";
-        }
+        result.add(this.heading.toString() + tmp + " " + this.mainContents.getFirst());
 
         for(int i = 1; i < this.mainContents.size(); i++)
-            ans += strIndent + "  " + this.mainContents.get(i) + "\n";
+            result.add(" " + this.mainContents.get(i));
 
-        if(this.mainContents.size() == 0)
-            ans += "\n";
-
-        return ans;
+        return result;
     }
 
-
-    /**
-     * returns a string that shows complete node's heading-based path from the main document node
-     * @return - path in String format
-     */
-    public String getPathString() {
-        if(this.parent == this)
-            return "";
-
-        String ans = this.parent.getPathString();
-
-        if(ans.length() > 0)
-            ans += ", ";
-
-        return ans + this.parent.heading.toString();
-    }
 
 
     /**
      * returns only the first line of contents
      * @param indent - number of white spaces that line indent be followed by
      * @return - properly formatted line
-     */
+
     private String getHighlights(int indent) {
         String ans = getIndent(indent) + this.heading.toString();
 
@@ -192,9 +166,8 @@ public class Contents {
     /**
      * gets whole node's table of contents (each heading is presented in highlight style)
      * @param indent
-     * @param maxDepth
      * @return
-     */
+
     public String getTableOfContents(int indent, int maxDepth) {
 
         if(maxDepth < this.heading.getType().getDepthLevel()) return "";
@@ -215,7 +188,7 @@ public class Contents {
      */
     public String getFullContents(int indent) {
 
-        String fullContents = this.toString(indent);
+        String fullContents = "";//this.toString(indent);
 
         if(this.heading.getType() == LineType.Chapter
                 || this.heading.getType() == LineType.Section
@@ -230,18 +203,5 @@ public class Contents {
             fullContents += "\n";
 
         return fullContents;
-    }
-
-
-    /**
-     * returns indent String (spaces only)
-     * @param indent
-     * @return
-     */
-    private String getIndent(int indent) {
-        String strIndent = "";
-        while(indent-- > 0) strIndent += "  ";
-
-        return strIndent;
     }
 }

@@ -22,7 +22,6 @@ public class SourceParser {
         deleteWordBreaks(list);
         connectTitlesWithChapters(list);
         setMainHeader(list);
-        deleteTrash(list); // second iteration in case some lines were made empty after deleting word breaks
 
         return list;
     }
@@ -60,8 +59,12 @@ public class SourceParser {
         for(int i = 0; i < sourceList.size() - 1; i++) {
 
             DocLine line = sourceList.get(i);
-            if(line.getType() == LineType.RegularText && Pattern.matches(".*\\p{IsAlphabetic}-$", line.getContents()))
+            if(line.getType() == LineType.RegularText && Pattern.matches(".*\\p{IsAlphabetic}-$", line.getContents())) {
                 RawTextParser.deleteWordBreak(line, sourceList.get(i + 1));
+
+                if(sourceList.get(i + 1).isEmpty())
+                    sourceList.remove(i + 1);
+            }
         }
     }
 
@@ -103,9 +106,7 @@ public class SourceParser {
      */
     private void deleteTrash (LinkedList<DocLine> sourceList) {
         for(int i = 0; i < sourceList.size(); i++)
-            while(i < sourceList.size() && (sourceList.get(i).getType() == LineType.Trash || sourceList.get(i).isEmpty())) {
-                System.out.println(sourceList.get(i).getContents());
+            while(i < sourceList.size() && (sourceList.get(i).getType() == LineType.Trash))
                 sourceList.remove(i);
-            }
     }
 }

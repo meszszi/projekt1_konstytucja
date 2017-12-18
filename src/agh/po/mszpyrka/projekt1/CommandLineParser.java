@@ -14,9 +14,9 @@ public class CommandLineParser {
     /**
      * Command line user manual:
      *
-     * #1 arg: file path
+     * #1 arg: file path | -h -> help mode
      *
-     * #1 option:
+     * (*) option:
      *      -t -> table of contents mode
      *
      * #2 arg: document path in single quotes, elements separated with comma ( e.g. 'DZIAŁ II, Rozdział 3, Art. 12., 5., 2)' )
@@ -26,23 +26,24 @@ public class CommandLineParser {
 
     public int getMode() throws Exception {
 
-        Exception invProgArgs = new Exception("Error: invalid program arguments.");
+        Exception invProgArgs = new Exception("error: invalid program arguments");
 
         // program should be executed with at least 1 argument
 
         if(this.commandLineArgs.length == 0)
-            throw new Exception(invProgArgs);
+            throw new Exception("error: invalid program arguments");
 
-        if(this.commandLineArgs.length == 1)
-            return 0;
+        if(this.commandLineArgs.length == 1) {
+            if (this.commandLineArgs[0].equals("-h"))   // help mode
+                return 2;
 
-        switch(this.commandLineArgs[1]) {
-            case "-t":
-                return 1;
-
-            default:
-                return 0;
+            return 0;                                   // default fullContents mode
         }
+
+        if(this.commandLineArgs[1].equals("-t"))        // tableOfContents mode
+            return 1;
+
+        return 0;
     }
 
 
@@ -59,7 +60,7 @@ public class CommandLineParser {
         String pathsStr = this.commandLineArgs[mode + 1];
         String[] paths = pathsStr.split(":");
         if(paths.length == 0 || paths.length > 2)
-            throw new IOException("error: invalid search expression");
+            throw new Exception("error: invalid search expression format");
 
         String[][] ans = new String[paths.length][];
         for(int i = 0; i < paths.length; i++) {
@@ -84,9 +85,4 @@ public class CommandLineParser {
 
         return ans;
     }
-
-//    public static LinkedList<String> getDocSearchPath(String[] commandLineArgs, int mode) {
-
-//    }
-
 }
