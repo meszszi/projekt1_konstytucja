@@ -16,14 +16,22 @@ public class MainSystem {
             Contents document = new Contents(list.getFirst());
             document.parse(list, 0);
 
-            DocSearcher d = new DocSearcher(document);
+            DocSearcher searcher = new DocSearcher(document);
             CommandLineParser cliParser = new CommandLineParser(args);
             String[][] paths = cliParser.getAllPaths();
 
-            LinkedList<Contents> list2 = d.getRange(paths[0], paths[0]);
-            //System.out.println(d.showContetns(paths[0], cliParser.getMode()));
-            DocPrinter printer = new DocPrinter();
-            System.out.println(DocPrinter.showContents(list2, false));
+            LinkedList<Contents> contents;
+            if(paths.length == 1)
+                contents = searcher.getRange(paths[0], paths[0]);
+
+            else
+                contents = searcher.getRange(paths[0], paths[1]);
+
+            boolean tableMode = false;
+            if(cliParser.getMode() == 1)
+                tableMode = true;
+
+            System.out.println(DocPrinter.showContents(contents, tableMode));
         }
         catch (Exception ex) {
             System.out.println(ex.getMessage()); //TODO

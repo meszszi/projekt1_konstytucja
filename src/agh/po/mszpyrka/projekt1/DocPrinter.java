@@ -2,13 +2,14 @@ package agh.po.mszpyrka.projekt1;
 
 import java.util.LinkedList;
 
+import static java.lang.Math.max;
+
+
 /**
  * class used for printing document contents in proper format
  */
 public class DocPrinter {
-
-    //TODO - add limit to table of contents mode depth
-
+    
     private static final String defaultIndent = "  ";
 
     /**
@@ -18,6 +19,21 @@ public class DocPrinter {
      */
     public static String showContents(LinkedList<Contents> sourceList, boolean tableOfContentsMode) {
 
+        int maxDepth = 0;
+
+        // max depth is set to two the greatest depth level from sourceList
+        for(Contents c : sourceList)
+            maxDepth = max(maxDepth, c.getHeading().getType().getDepthLevel());
+
+        if(maxDepth == 0)
+            maxDepth = 3;
+
+        else if(maxDepth <= 3)
+            maxDepth = 4;
+
+        else
+            maxDepth = 7;
+
         LinkedList<String> resultList = new LinkedList<>();
 
         boolean startIndent = true;
@@ -26,7 +42,7 @@ public class DocPrinter {
 
         resultList.add(getPathToRoot(sourceList.getFirst()));
         resultList.add("");
-        resultList.addAll(formatContents(sourceList, startIndent, tableOfContentsMode));
+        resultList.addAll(formatContents(sourceList, startIndent, tableOfContentsMode, maxDepth));
         deleteAdditionalEmptyLines(resultList);
 
         String resultStr = "";
@@ -43,13 +59,16 @@ public class DocPrinter {
      * @param startIndent - if true, additional indent is set to formatted node's contents
      * @return - properly formatted table of contents
      */
-    private static LinkedList<String> formatContents(LinkedList<Contents> sourceList, boolean startIndent, boolean tableOfContentsMode) {
+    private static LinkedList<String> formatContents(LinkedList<Contents> sourceList, boolean startIndent, boolean tableOfContentsMode, int maxDepth) {
 
         LinkedList<String> result = new LinkedList<>();
 
         for(int i = 0; i < sourceList.size(); i++) {
 
             Contents c = sourceList.get(i);
+
+            if(tableOfContentsMode && c.getHeading().getType().getDepthLevel() > maxDepth)
+                continue;
 
             boolean needsIndent = false;
 
@@ -66,7 +85,7 @@ public class DocPrinter {
 
             if(tableOfContentsMode) {
 
-                String highlights = properIndent + c.getHighlights();
+                String highlights = properIndent + c.getHighlights(maxDepth);
                 result.add(highlights);
             }
 
@@ -84,7 +103,7 @@ public class DocPrinter {
             if(c.getHeading().getType().getDepthLevel() <= 3)
                 result.add("");
 
-            LinkedList<String> childrenContents = formatContents(c.getSubcontents(), false, tableOfContentsMode);
+            LinkedList<String> childrenContents = formatContents(c.getSubcontents(), false, tableOfContentsMode, maxDepth);
 
             // all contents from children nodes should have greater indent
             for(int j = 0; j < childrenContents.size(); j++)

@@ -43,6 +43,9 @@ public class CommandLineParser {
         if(this.commandLineArgs[1].equals("-t"))        // tableOfContents mode
             return 1;
 
+        if(this.commandLineArgs.length > 4)
+            throw invProgArgs;
+
         return 0;
     }
 

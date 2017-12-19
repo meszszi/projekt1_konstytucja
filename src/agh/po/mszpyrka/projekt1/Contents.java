@@ -143,19 +143,24 @@ public class Contents {
 
     /**
      * formats node's contents for table of contents mode (heading + first line of mainContents is selected)
-     * @return
+     * @param minDepth - recursive subtontents' highlights are included if this level is reached
+     * @return - formatted highlights for Contents node
      */
-    public String getHighlights() {
+    public String getHighlights(int minDepth) {
         String ans = this.heading.toString();
 
         if(this.heading.getType() == LineType.MainHeader) // doesn't insclude any text after heading in case of MainHeader
             return ans;
 
-        if(this.mainContents.size() > 0)                  // if there are any mainContents -> includes the first line
+        if(this.mainContents.size() > 0) {                // if there are any mainContents -> includes the first line
             ans += " ~ " + this.mainContents.getFirst();
 
-        if(this.mainContents.size() > 1)                  // if there is more -> adds "(...)"
-            ans += "(...)";
+            if(this.mainContents.size() > 1)                  // if there is more -> adds "(...)"
+                ans += "(...)";
+        }
+
+        else if(this.subcontents.size() > 0 && this.subcontents.getFirst().getHeading().getType().getDepthLevel() > minDepth)
+            ans += " " + this.subcontents.getFirst().getHighlights(minDepth);
 
         return ans;
     }
