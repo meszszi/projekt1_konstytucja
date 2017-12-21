@@ -17,18 +17,18 @@ public class DocSearcher {
     /**
      *
      * @param path - String array, each element is matched with nodes' headings
-     * @return - node that matches given path
+     * @return - node that isSubsequenceOf given path
      * @throws Exception - if no or more than one nodes are found
      */
-    public Contents getNode(String[] path) throws Exception{
+    public Contents getNode(DocumentPath path) throws Exception{
 
-        LinkedList<Contents> list = findMatchingNodes(path, document, 0);
+        LinkedList<Contents> list = findMatchingNodes(path, document);
 
         if(list.size() == 0)
-            throw new Exception("invalid path: no matches were found");
+            throw new Exception("invalid search expression: no isSubsequenceOf were found");
 
         if(list.size() > 1)
-            throw new Exception("insufficient path: multiple matches were found");
+            throw new Exception("insufficient search expression: multiple isSubsequenceOf were found");
 
         return list.getFirst();
     }
@@ -41,7 +41,7 @@ public class DocSearcher {
      * @return - list of nodes between first and second one
      * @throws Exception - if paths are invalid or given bounds are not in order in document
      */
-    public LinkedList<Contents> getRange(String[] path1, String[] path2) throws Exception{
+    public LinkedList<Contents> getRange(DocumentPath path1, DocumentPath path2) throws Exception{
 
         Contents first = this.getNode(path1);
         Contents second = this.getNode(path2);
@@ -124,25 +124,22 @@ public class DocSearcher {
 
 
     /**
-     * searches for document nodes specified by given path
-     * @param path - String array, each element is matched with nodes' headings
+     * finds nodes which match given path
+     * @param path - DocumentPath
      * @param startNode - node to begin searching with
-     * @return - list of Contents nodes that match specified path
+     * @return - list of Contents nodes that are specified by given path
      */
-    private LinkedList<Contents> findMatchingNodes (String[] path, Contents startNode, int depthIndex) {
+    private LinkedList<Contents> findMatchingNodes (DocumentPath path, Contents startNode) {
 
         LinkedList<Contents> list = new LinkedList<>();
 
-        if(depthIndex >= path.length) {
+        if(path.isSubsequenceOf(startNode.getDocumentPath())) {
             list.add(startNode);
             return list;
         }
 
-        if(startNode.getHeading().matches(path[depthIndex]))
-            return findMatchingNodes(path, startNode, depthIndex + 1);
-
         for(Contents c : startNode.getSubcontents()) {
-            LinkedList<Contents> tmp = findMatchingNodes(path, c, depthIndex);
+            LinkedList<Contents> tmp = findMatchingNodes(path, c);
             list.addAll(tmp);
         }
 

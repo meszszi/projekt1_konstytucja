@@ -12,7 +12,7 @@ public class RawTextParser {
     /**
      * determins a line type of a single line String
      * @param line - single line from input file
-     * @return LineType that matches the beginning of the line (thou the line may not be heading starter, e.g. "1997)."
+     * @return LineType that matches given String contents
      */
     public static LineType getLineType(String line) {
 

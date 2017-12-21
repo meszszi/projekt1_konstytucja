@@ -5,6 +5,7 @@ import java.util.LinkedList;
 public class Contents {
     private final Heading heading;
     private final Contents parent;
+    private final DocumentPath documentPath;
     private LinkedList<String> mainContents;
     private LinkedList<Contents> subcontents;
 
@@ -13,6 +14,7 @@ public class Contents {
         subcontents = new LinkedList<>();
         this.heading = new Heading(line);
         this.parent = this;
+        this.documentPath = new DocumentPath(this.heading.toString());
     }
 
     public Contents(Contents parent, DocLine line) {
@@ -20,6 +22,7 @@ public class Contents {
         subcontents = new LinkedList<>();
         this.heading = new Heading(line);
         this.parent = parent;
+        this.documentPath = this.parent.getDocumentPath().extend(this.heading.toString());
     }
 
 
@@ -30,6 +33,13 @@ public class Contents {
     public LinkedList<Contents> getSubcontents() {
         return this.subcontents;
     }
+
+
+    /**
+     * gets mainContents
+     * @return - mainContents
+     */
+    public LinkedList<String> getMainContents() { return this.mainContents; }
 
 
     /**
@@ -51,6 +61,15 @@ public class Contents {
 
 
     /**
+     * gets documentPath
+     * @return - documentPath
+     */
+    public DocumentPath getDocumentPath() {
+        return this.documentPath;
+    }
+
+
+    /**
      * parses sourceList into Contents type object hierarchy
      * @param sourceList - list of Strings to parse
      * @param begin - index of the element in sourceList to start parsing with
@@ -68,7 +87,8 @@ public class Contents {
         while(iterator < sourceList.size() && this.heading.getType().getDepthLevel() < sourceList.get(iterator).getType().getDepthLevel()) {
             Contents subc = new Contents(this, sourceList.get(iterator));
             iterator = subc.parse(sourceList, iterator);
-            this.extendSubcontents(subc);
+            if(!subc.getHeading().isRange())    // ignores range-type nodes
+                this.extendSubcontents(subc);
         }
 
         return iterator;
@@ -106,62 +126,5 @@ public class Contents {
      */
     private void extendSubcontents(Contents c) {
         this.subcontents.add(c);
-    }
-
-
-    /**
-     * returns properly formatted text for single Contents node (doesn't include any subContents)
-     * @return String array, each element containing single line
-     */
-    public LinkedList<String> mainContentsToStringList() {
-
-        LinkedList<String> result = new LinkedList<>();
-
-        if(this.heading.getType() == LineType.MainHeader || this.mainContents.size() == 0) {
-            result.add(this.heading.toString());
-            result.addAll(this.mainContents);
-
-            return result;
-        }
-
-        String tmp = "";
-
-        if(this.heading.getType() == LineType.Chapter)
-            tmp = ":";
-
-        else if(this.heading.getType() == LineType.Section)
-            tmp = ")";
-
-        result.add(this.heading.toString() + tmp + " " + this.mainContents.getFirst());
-
-        for(int i = 1; i < this.mainContents.size(); i++)
-            result.add(" " + this.mainContents.get(i));
-
-        return result;
-    }
-
-
-    /**
-     * formats node's contents for table of contents mode (heading + first line of mainContents is selected)
-     * @param minDepth - recursive subtontents' highlights are included if this level is reached
-     * @return - formatted highlights for Contents node
-     */
-    public String getHighlights(int minDepth) {
-        String ans = this.heading.toString();
-
-        if(this.heading.getType() == LineType.MainHeader) // doesn't insclude any text after heading in case of MainHeader
-            return ans;
-
-        if(this.mainContents.size() > 0) {                // if there are any mainContents -> includes the first line
-            ans += " ~ " + this.mainContents.getFirst();
-
-            if(this.mainContents.size() > 1)                  // if there is more -> adds "(...)"
-                ans += "(...)";
-        }
-
-        else if(this.subcontents.size() > 0 && this.subcontents.getFirst().getHeading().getType().getDepthLevel() > minDepth)
-            ans += " " + this.subcontents.getFirst().getHighlights(minDepth);
-
-        return ans;
     }
 }

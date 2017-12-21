@@ -8,8 +8,8 @@ import static java.lang.Math.max;
 /**
  * class used for printing document contents in proper format
  */
-public class DocPrinter {
-    
+public class DocFormatter {
+
     private static final String defaultIndent = "  ";
 
     /**
@@ -85,13 +85,13 @@ public class DocPrinter {
 
             if(tableOfContentsMode) {
 
-                String highlights = properIndent + c.getHighlights(maxDepth);
+                String highlights = properIndent + ContentsFormatter.getHighlights(c, maxDepth);
                 result.add(highlights);
             }
 
             else {
 
-                LinkedList<String> mainContents = (c.mainContentsToStringList());
+                LinkedList<String> mainContents = (ContentsFormatter.mainContentsToStringList(c));
 
                 for(int j = 0; j < mainContents.size(); j++)
                     mainContents.set(j, properIndent + mainContents.get(j));

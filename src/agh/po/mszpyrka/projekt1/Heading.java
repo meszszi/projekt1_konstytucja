@@ -31,7 +31,7 @@ public class Heading {
 
 
     /**
-     * checks if given string matches the heading
+     * checks if given string isSubsequenceOf the heading
      * @param h
      * @return
      */
@@ -47,13 +47,13 @@ public class Heading {
      * checks if heading title represents a range of headings (e.g. "Art. 123-156.")
      * @return true if title contains [digits]-[digits] pattern
      */
-    private boolean isRange () {
+    public boolean isRange () {
         return Pattern.matches("\\D*[0-9]+–[0-9]+\\D*", this.title);
     }
 
 
     /**
-     * checks if given string matches this.heading in case of heading being a range of contents nodes
+     * checks if given string isSubsequenceOf this.heading in case of heading being a range of contents nodes
      * @param h - String that is checked for matching this.heading
      * @return - true only if beginning parts of both h and this.heading are the same and the rest part of h is a number contained in this.heading range
      */

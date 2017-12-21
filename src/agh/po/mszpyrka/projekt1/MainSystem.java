@@ -6,41 +6,55 @@ import java.util.LinkedList;
 public class MainSystem {
     public static void main(String[] args) {
 
-        try (BufferedReader reader = new BufferedReader(
+        try {
+            ArgsManager manager = new ArgsManager(args);
+
+            // print help message
+            if(manager.needsHelp())
+                manager.printHelp();
+
+            else {
+                // create reader from source file path
+                BufferedReader reader = new BufferedReader(
                         new FileReader(
-                                new File(args[0] + "uokik.txt")))){
+                                new File(manager.getFilePath())));
 
-            SourceParser sourceParser = new SourceParser();
-            LinkedList<DocLine> list = sourceParser.parseFromReader(reader);
+                // create list of DocLines
+                SourceParser sourceParser = new SourceParser();
+                LinkedList<DocLine> lineList = sourceParser.parseFromReader(reader);
 
-            Contents document = new Contents(list.getFirst());
-            document.parse(list, 0);
+                // create Contents tree
+                Contents document = new Contents(lineList.getFirst());
+                document.parse(lineList, 0);
 
-            DocSearcher searcher = new DocSearcher(document);
-            CommandLineParser cliParser = new CommandLineParser(args);
-            String[][] paths = cliParser.getAllPaths();
+                if(manager.hasSearchExpression()) {
 
-            LinkedList<Contents> contents;
-            if(paths.length == 1)
-                contents = searcher.getRange(paths[0], paths[0]);
+                    DocSearcher searcher = new DocSearcher(document);
+                    DocumentPath[] paths = manager.getSearchPaths();
 
-            else
-                contents = searcher.getRange(paths[0], paths[1]);
+                    for(DocumentPath d : paths)
+                        System.out.println(d.toString());
 
-            boolean tableMode = false;
-            if(cliParser.getMode() == 1)
-                tableMode = true;
+                    LinkedList<Contents> sourceList;
 
-            System.out.println(DocPrinter.showContents(contents, tableMode));
+                    if(paths.length == 1)
+                        sourceList = searcher.getRange(paths[0], paths[0]);
+
+                    else
+                        sourceList = searcher.getRange(paths[0], paths[1]);
+
+                    System.out.println(DocFormatter.showContents(sourceList, manager.tableOfContentsMode()));
+                }
+                else {
+                    LinkedList<Contents> ll = new LinkedList<>();
+                    ll.add(document);
+                    System.out.println(DocFormatter.showContents(ll, manager.tableOfContentsMode()));
+                }
+            }
         }
         catch (Exception ex) {
+            System.out.println("cos sie zwaliło XD");
             System.out.println(ex.getMessage()); //TODO
         }
-
-
-
-
-
     }
-
 }
