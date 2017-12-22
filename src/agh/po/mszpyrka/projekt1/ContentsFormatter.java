@@ -54,11 +54,11 @@ public class ContentsFormatter {
             ans += " ~ " + node.getMainContents().getFirst();
 
             if(node.getMainContents().size() > 1)                  // if there is more -> adds "(...)"
-                ans += "(...)";
+                ans += " (...)";
         }
 
         else if(node.getSubcontents().size() > 0 && node.getSubcontents().getFirst().getHeading().getType().getDepthLevel() > minDepth)
-            ans += " " + getHighlights(node.getSubcontents().getFirst(), minDepth);
+            ans += " | " + getHighlights(node.getSubcontents().getFirst(), minDepth);
 
         return ans;
     }
