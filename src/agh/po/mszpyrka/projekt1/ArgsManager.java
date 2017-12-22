@@ -25,10 +25,7 @@ public class ArgsManager {
         Option tableMode = new Option("t", false, "show only table of contents");
 
         // search expression
-        Option show = new Option("s", "show", true, "show only specified part of document,\n" +
-                "e.g. -s \"rozdział II, art. 32., 2.\";\n" +
-                "~> use \":\" to specify range,\n" +
-                "e.g. -s \"art. 23. : art. 48.\"");
+        Option show = new Option("s", "show", true, "show only specified part of document");
         show.setArgName("expression");
 
         // help
@@ -54,6 +51,10 @@ public class ArgsManager {
         return this.commandLine.hasOption("t");
     }
 
+    public boolean hasFilePath() {
+        return this.commandLine.hasOption("f");
+    }
+
     public String getFilePath() {
         return this.commandLine.getOptionValue("f");
     }
@@ -62,27 +63,19 @@ public class ArgsManager {
         return this.commandLine.hasOption("s");
     }
 
-    public void printHelp() {
-
-        String header = "search through act file\n\n";
-
-        HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("appname", header, this.options, "", true);
-
-    }
 
     /**
      * divides search expression String into array of String-paths
      * @return - array of path-arrays
-     * @throws IOException - thrown when there is more than one colon in search expression
+     * @throws IllegalSearchExpressionException - thrown when there is more than one colon in search expression
      */
-    public DocumentPath[] getSearchPaths () throws Exception {
+    public DocumentPath[] getSearchPaths () throws IllegalSearchExpressionException {
 
         String[] paths = this.commandLine.getOptionValue("s").split(":");
 
 
         if(paths.length == 0 || paths.length > 2)
-            throw new Exception("error: invalid search expression format");
+            throw new IllegalSearchExpressionException("Invalid search expression format");
 
         DocumentPath[] result = new DocumentPath[paths.length];
         for(int i = 0; i < result.length; i++)
@@ -93,17 +86,21 @@ public class ArgsManager {
 
 
     /**
-     * get String array containing single nodes' headings
-     * @param pathStr - String containing headings separated with ','
-     * @return - array containing single heading Strings
+     * prints usage guide using provided in commons-cli HelpFormatter
      */
-    private String[] getPath(String pathStr) {
+    public void printHelp() {
 
-        String[] ans = pathStr.split(",");
+        String header = "search through act file\n\n";
 
-        for(int i = 0; i < ans.length; i++)
-            ans[i] = ans[i].trim();
+        String footer = "\nusage examples:\n" +
+                "appname -f uokik.txt -s \"art 31, 15)\"   <- this command will show only contents of article 31, subsection 15)\n" +
+                "appname -f kontytucja.txt -s \"rozdział ii : rozdział iii, art 90\"   <- this command will show contents from chapter II and everything from chapter III up to article 90\n" +
+                "appname -f uokik.txt -s \"dział v\" -t   <- this command will show table of contents for section V\n" +
+                "appname -f konstytucja.txt -t   <- this command will show table of contents for whole document";
 
-        return ans;
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.setWidth(200);
+        formatter.printHelp("appname", header, this.options, footer, true);
+
     }
 }
