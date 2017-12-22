@@ -1,7 +1,7 @@
 package agh.po.mszpyrka.projekt1;
 
 /**
- * class used to represent Content node paths in document
+ * Class used to represent Content node paths in document.
  */
 public class DocumentPath {
     private final String[] path;
@@ -22,14 +22,14 @@ public class DocumentPath {
         this.path = path;
     }
 
-    // getter for this.path
+    // Gets path.
     public String[] getPath() {
         return this.path;
     }
 
 
     /**
-     * creates new DocumentPath from existing one by adding given String to path array
+     * Creates new DocumentPath from existing one by adding given String to path array.
      * @param s - String to add
      * @return - extended DocumentPath
      */
@@ -52,7 +52,7 @@ public class DocumentPath {
     }
 
     /**
-     * checks if this isSubsequenceOf given DocumentPath
+     * Checks if this isSubsequenceOf given DocumentPath.
      * @param docPath - another docPath
      * @return - true if this.path is a subsequence of docPath.path
      * (e.g. {"art. 123", "c)"} isSubsequenceOf {"rozdział II", "art 123", "4.", "c)"} but not the other way around)
@@ -71,8 +71,8 @@ public class DocumentPath {
 
 
     /**
-     * checks if two strings represent the same Headings, matching function is not sensitive to letter cases and missing dots
-     * (e.g. "art 123" isSubsequenceOf "art. 123", "Art. 123" isSubsequenceOf "aRT.. 123.", "art 123a" doesn't match "art 123", "4" matches "4.", but not "4)")
+     * Checks if two strings represent the same Headings, matching function is not sensitive to letter cases and missing dots
+     * (e.g. "art 123" isSubsequenceOf "art. 123", "Art. 123" isSubsequenceOf "aRT.. 123.", "art 123a" doesn't match "art 123", "4" matches "4.", but not "4)").
      * @param a - first String
      * @param b - second String
      * @return - true only if given strings match each other

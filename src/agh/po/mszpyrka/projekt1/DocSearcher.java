@@ -3,7 +3,7 @@ package agh.po.mszpyrka.projekt1;
 import java.util.LinkedList;
 
 /**
- * class used for finding particular nodes in Contents tree
+ * Class used for finding particular nodes in Contents tree.
  */
 public class DocSearcher {
 
@@ -15,7 +15,7 @@ public class DocSearcher {
 
 
     /**
-     *
+     * Searches for node specified by given DocumentPath.
      * @param path - String array, each element is matched with nodes' headings
      * @return - node that matches given path
      * @throws InvalidSearchExpressionException - if no or more than one nodes are found
@@ -35,7 +35,7 @@ public class DocSearcher {
 
 
     /**
-     *
+     * Searches for list of nodes between two given DocumentPaths.
      * @param path1 - path for the first node
      * @param path2 - path for the second node
      * @return - list of nodes between first and second one
@@ -66,7 +66,7 @@ public class DocSearcher {
 
 
     /**
-     * checks if two nodes are in proper order in Contents tree
+     * Checks if two nodes are in proper order in Contents tree.
      * @param first - first node
      * @param second - second node
      * @return - true only if the second node represents further part of the document than the first one
@@ -96,7 +96,7 @@ public class DocSearcher {
 
 
     /**
-     * takes in a Contents node and searches for its first 'brother' in Contents order (goes to parent's subcontents list and gets the first node after given one)
+     * Takes in a Contents node and searches for its first 'brother' in Contents order (goes to parent's subcontents list and gets the first node after given one).
      * @param c - node
      * @return - next node (null if node is last in its parent subcontents list)
      */
@@ -111,7 +111,7 @@ public class DocSearcher {
 
 
     /**
-     * takes in a node and searches for its successor in document
+     * Takes in a node and searches for its successor in document.
      * @param c - node
      * @return - c's successor
      */
@@ -124,7 +124,7 @@ public class DocSearcher {
 
 
     /**
-     * finds nodes which match given path
+     * Finds nodes which match given path.
      * @param path - DocumentPath
      * @param startNode - node to begin searching with
      * @return - list of Contents nodes that are specified by given path

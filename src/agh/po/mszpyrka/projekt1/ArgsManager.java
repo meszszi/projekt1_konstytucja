@@ -4,7 +4,7 @@ package agh.po.mszpyrka.projekt1;
 import org.apache.commons.cli.*;
 
 /**
- * class used for parsing and managing program arguments
+ * Class used for parsing and managing program arguments.
  */
 public class ArgsManager {
 
@@ -23,7 +23,7 @@ public class ArgsManager {
         Option tableMode = new Option("t", false, "show only table of contents");
 
         // search expression
-        Option show = new Option("s", "show", true, "show only specified part of document");
+        Option show = new Option("s", "show", true, "show only specified part of document (use ':' to specify range)");
         show.setArgName("expression");
 
         // help
@@ -63,7 +63,7 @@ public class ArgsManager {
 
 
     /**
-     * divides search expression String into array of String-paths
+     * Divides search expression String into array of String-paths.
      * @return - array of path-arrays
      * @throws InvalidSearchExpressionException - thrown when there is more than one colon in search expression or the expression is empty
      */
@@ -84,7 +84,7 @@ public class ArgsManager {
 
 
     /**
-     * prints usage guide using provided in commons-cli HelpFormatter
+     * Prints usage guide using provided in commons-cli HelpFormatter.
      */
     public void printHelp() {
 

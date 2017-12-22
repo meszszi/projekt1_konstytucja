@@ -21,7 +21,7 @@ public class Heading {
     }
 
     /**
-     * checks if heading title represents a range of headings (e.g. "Art. 123-156.")
+     * Checks if heading title represents a range of headings (e.g. "Art. 123-156.").
      * @return true if title contains [digits]-[digits] pattern
      */
     public boolean isRange () {

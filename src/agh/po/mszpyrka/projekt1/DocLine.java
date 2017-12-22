@@ -1,7 +1,7 @@
 package agh.po.mszpyrka.projekt1;
 
 /**
- * class that represents single line from source file
+ * Class that represents single line from source file.
  */
 public class DocLine {
     private LineType type;

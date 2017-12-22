@@ -49,40 +49,10 @@ public enum LineType {
 
 
     /**
-     * gets depth level of a lineType according to the hierarchy presented in the comment section above
+     * Gets depth level of a lineType according to the hierarchy presented in the comment section above.
      * @return depthLevel
      */
     public int getDepthLevel () {
-        switch (this) {
-            case MainHeader:
-                return 0;
-
-            case Section:
-                return 1;
-
-            case Chapter:
-                return 2;
-
-            case Title:
-                return 3;
-
-            case Article:
-                return 4;
-
-            case NumberDotPoint:
-                return 5;
-
-            case NumberParenthPoint:
-                return 6;
-
-            case LetterParenthPoint:
-                return 7;
-
-            case RegularText:
-                return 8;
-
-            default:
-                return 9;
-        }
+        return this.ordinal();
     }
 }

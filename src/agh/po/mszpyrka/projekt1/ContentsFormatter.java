@@ -3,13 +3,13 @@ package agh.po.mszpyrka.projekt1;
 import java.util.LinkedList;
 
 /**
- * class used to format Contents nodes
+ * Class used to format Contents nodes.
  */
 public class ContentsFormatter {
 
     /**
-     * returns properly formatted text for single Contents node (doesn't include any subContents)
-     * @return String array, each element containing single line
+     * Returns properly formatted text for single Contents node (doesn't include any subContents).
+     * @return - String array, each element containing single line
      */
     public static LinkedList<String> mainContentsToStringList(Contents node) {
 
@@ -40,7 +40,7 @@ public class ContentsFormatter {
 
 
     /**
-     * formats node's contents for table of contents mode (heading + first line of mainContents is selected)
+     * Formats node's contents for table of contents mode (heading + first line of mainContents is selected).
      * @param minDepth - recursive subtontents' highlights are included if this level is reached
      * @return - formatted highlights for Contents node
      */

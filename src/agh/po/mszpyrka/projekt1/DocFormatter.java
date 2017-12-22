@@ -6,14 +6,14 @@ import static java.lang.Math.max;
 
 
 /**
- * class used for printing document contents in proper format
+ * Class used for printing document contents in proper format.
  */
 public class DocFormatter {
 
     private static final String defaultIndent = "  ";
 
     /**
-     * converts text from list of Contents nodes to readable String format
+     * Converts text from list of Contents nodes to readable String format.
      * @param sourceList - input list of nodes
      * @return - properly formatted String
      */
@@ -57,7 +57,7 @@ public class DocFormatter {
 
 
     /**
-     * converts contents list to table of contents with proper indents
+     * Converts contents list to table of contents with proper indents.
      * @param sourceList - list of Contents nodes
      * @param startIndent - if true, additional indent is set to formatted node's contents
      * @return - properly formatted table of contents
@@ -125,7 +125,7 @@ public class DocFormatter {
 
 
     /**
-     * gets path from root node of Contents tree to given node
+     * Gets path from root node of Contents tree to given node.
      * @param c - node
      * @return - path in String format
      */
@@ -144,7 +144,7 @@ public class DocFormatter {
 
 
     /**
-     * gets file path from given level to given node
+     * Gets file path from given level to given node.
      * @param c - node specified by the path
      * @param level - depth level from which the path starts
      * @return - properly formatted String representing the path
@@ -164,7 +164,7 @@ public class DocFormatter {
 
 
     /**
-     * processes list of Strings in a way that no two consecutive empty lines are left
+     * Processes list of Strings in a way that no two consecutive empty lines are left.
      * @param list - list of Strings to process
      */
     private static void deleteAdditionalEmptyLines(LinkedList<String> list) {

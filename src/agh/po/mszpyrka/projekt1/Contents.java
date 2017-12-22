@@ -27,7 +27,7 @@ public class Contents {
 
 
     /**
-     * gets subcontents list
+     * Gets subcontents list.
      * @return - subcontents
      */
     public LinkedList<Contents> getSubcontents() {
@@ -36,14 +36,14 @@ public class Contents {
 
 
     /**
-     * gets mainContents
+     * Gets mainContents.
      * @return - mainContents
      */
     public LinkedList<String> getMainContents() { return this.mainContents; }
 
 
     /**
-     * gets heading
+     * Gets heading.
      * @return - heading
      */
     public Heading getHeading() {
@@ -52,7 +52,7 @@ public class Contents {
 
 
     /**
-     * gets parent
+     * Gets parent.
      * @return - parent
      */
     public Contents getParent() {
@@ -61,7 +61,7 @@ public class Contents {
 
 
     /**
-     * gets documentPath
+     * Gets documentPath.
      * @return - documentPath
      */
     public DocumentPath getDocumentPath() {
@@ -70,7 +70,7 @@ public class Contents {
 
 
     /**
-     * parses sourceList into Contents type object hierarchy
+     * Parses sourceList into Contents type object hierarchy.
      * @param sourceList - list of Strings to parse
      * @param begin - index of the element in sourceList to start parsing with
      * @return - index of the sourceList element that the parsing ended on (points to first line not parsed yet)
@@ -96,7 +96,7 @@ public class Contents {
 
 
     /**
-     * checks if given node lays on path from 'this' to root node in Contents tree
+     * Checks if given node lays on path from 'this' to root node in Contents tree.
      * @param c - node that may be potential father of 'this'
      * @return - true only 'this' is a child of c (not necessarily direct child)
      */
@@ -112,7 +112,7 @@ public class Contents {
 
 
     /**
-     * adds next line to mainContents
+     * Adds next line to mainContents.
      * @param s - line to add to mainContents list
      */
     private void extendMainContents(String s) {
@@ -121,7 +121,7 @@ public class Contents {
 
 
     /**
-     * adds Contents object to subcontents list
+     * Adds Contents object to subcontents list.
      * @param c - node to add to subcontents list
      */
     private void extendSubcontents(Contents c) {

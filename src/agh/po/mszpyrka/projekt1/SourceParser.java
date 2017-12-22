@@ -7,12 +7,12 @@ import java.util.regex.Pattern;
 
 
 /**
- * class used for parsing source text and creating further usable list of DocLines
+ * Class used for parsing source text and creating further usable list of DocLines.
  */
 public class SourceParser {
 
     /**
-     * converts raw text from input file to list of ready-to-use lines for further document composing
+     * Converts raw text from input file to list of ready-to-use lines for further document composing.
      * @param reader - BufferedReader reading from input file
      * @return - awesome list of text lines divided into different categories (LineType values)
      */
@@ -28,7 +28,7 @@ public class SourceParser {
 
 
     /**
-     * converts input file to list of properly set DocLines
+     * Converts input file to list of properly set DocLines.
      * @param reader - BufferedReader reading from input txt file
      * @return  LinkedList of DocLines
      */
@@ -51,7 +51,7 @@ public class SourceParser {
 
 
     /**
-     * connects words from consecutive RegularText type lines if there is a hyphen at the end of the first line
+     * Connects words from consecutive RegularText type lines if there is a hyphen at the end of the first line.
      * @param sourceList - list of lines created with initialParse method
      */
     private void deleteWordBreaks (LinkedList<DocLine> sourceList) {
@@ -70,7 +70,7 @@ public class SourceParser {
 
 
     /**
-     * searches for Title type lines after Chapter type lines, if one is found it's type is changed to RegularText
+     * Searches for Title type lines after Chapter type lines, if one is found it's type is changed to RegularText.
      * @param sourceList - list of lines parsed with initialParse method
      */
     private void connectTitlesWithChapters (LinkedList<DocLine> sourceList) {
@@ -83,7 +83,7 @@ public class SourceParser {
 
 
     /**
-     * creates MainHeader from document opening title-type lines
+     * Creates MainHeader from document opening title-type lines.
      * @param sourceList - list of DocLines parsed with initialParse method
      */
     private void setMainHeader (LinkedList<DocLine> sourceList) {
@@ -101,7 +101,7 @@ public class SourceParser {
 
 
     /**
-     * deletes Trash type lines from sourceList
+     * Deletes Trash type lines from sourceList.
      * @param sourceList - list of DocLines parsed with initialParse method
      */
     private void deleteTrash (LinkedList<DocLine> sourceList) {

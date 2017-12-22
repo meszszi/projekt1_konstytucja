@@ -23,6 +23,4 @@ public class Main {
             System.err.println("Unexpected error occurred: " + e.getMessage());
         }
     }
-
-
 }

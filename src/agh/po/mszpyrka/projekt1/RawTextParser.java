@@ -5,14 +5,14 @@ import java.util.regex.Pattern;
 
 
 /**
- * class used for operating on single lines from source file
+ * Class used for operating on single lines from source file.
  */
 public class RawTextParser {
 
     /**
-     * determins a line type of a single line String
+     * Determines a line type of a single line String.
      * @param line - single line from input file
-     * @return LineType that matches given String contents
+     * @return - LineType that matches given String contents
      */
     public static LineType getLineType(String line) {
 
@@ -50,7 +50,7 @@ public class RawTextParser {
 
 
     /**
-     * connects word parts from two consecutive lines when there is a word break
+     * Connects word parts from two consecutive lines when there is a word break.
      * @param first - line that contains the first part of the word and hyphen at the end
      * @param second - line that contains the second part of the word
      */
@@ -66,7 +66,7 @@ public class RawTextParser {
 
 
     /**
-     * splits given String into array of Strings, each containing only one line type
+     * Splits given String into array of Strings, each containing only one line type.
      * @param s - String from source file
      * @return - array of Strings
      */
@@ -101,9 +101,9 @@ public class RawTextParser {
 
 
     /**
-     * tests if a string has date-like format (dddd-dd-dd), d -> digit
+     * Tests if a string has date-like format (dddd-dd-dd), d -> digit.
      * @param line - string to check
-     * @return true only if date pattern is matched
+     * @return - true only if date pattern is matched
      */
     private static boolean isDate(String line) {
         return Pattern.matches("^[0-9]{4}-[0-9]{2}-[0-9]{2}.*", line);
@@ -111,7 +111,7 @@ public class RawTextParser {
 
 
     /**
-     * finds nth string's whitespace's position
+     * Finds nth string's whitespace's position.
      * @param string - source string
      * @param n - number of whitespaces
      * @return - index of nth white space position
