@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 
 public class HeadingTest {
     @Test
-    public void matches() throws Exception {
+    public void isRange() throws Exception {
 
         DocLine line1 = new DocLine(LineType.ARTICLE, "Art. 156.");
         Heading heading1 = new Heading(line1);

@@ -43,14 +43,6 @@ public class DocumentPath {
         return new DocumentPath(path);
     }
 
-    public String toString() {
-        String s = "";
-        for(String xd : this.path)
-            s += xd;
-
-        return s;
-    }
-
     /**
      * Checks if this isSubsequenceOf given DocumentPath.
      * @param docPath - another docPath
