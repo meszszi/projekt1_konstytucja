@@ -97,8 +97,8 @@ public class Contents {
 
     /**
      * checks if given node lays on path from 'this' to root node in Contents tree
-     * @param c
-     * @return
+     * @param c - node that may be potential father of 'this'
+     * @return - true only 'this' is a child of c (not necessarily direct child)
      */
     public boolean isChildOf(Contents c) {
         if(this.parent == c || c == this)
