@@ -85,39 +85,4 @@ public enum LineType {
                 return 9;
         }
     }
-
-    @Override
-    public String toString() {
-        switch (this) {
-            case MainHeader:
-                return "H";
-
-            case Section:
-                return "S";
-
-            case Chapter:
-                return "C";
-
-            case Title:
-                return "T";
-
-            case Article:
-                return "A";
-
-            case NumberDotPoint:
-                return "D";
-
-            case NumberParenthPoint:
-                return "P";
-
-            case LetterParenthPoint:
-                return "L";
-
-            case RegularText:
-                return "R";
-
-            default:
-                return "X";
-        }
-    }
 }

@@ -71,8 +71,8 @@ public class DocumentPath {
 
 
     /**
-     * checks if two strings represent the same Headings, matching function is not sensitive to letter cases and missing dots in Strings
-     * (e.g. "art 123" isSubsequenceOf "art. 123", "Art. 123" isSubsequenceOf "aRT.. 123.", "art 123a" doesn't match "art 123")
+     * checks if two strings represent the same Headings, matching function is not sensitive to letter cases and missing dots
+     * (e.g. "art 123" isSubsequenceOf "art. 123", "Art. 123" isSubsequenceOf "aRT.. 123.", "art 123a" doesn't match "art 123", "4" matches "4.", but not "4)")
      * @param a - first String
      * @param b - second String
      * @return - true only if given strings match each other
@@ -81,14 +81,8 @@ public class DocumentPath {
         a = a.toLowerCase();
         b = b.toLowerCase();
 
-        String[] tabA = a.split(" ");
-        String[] tabB = b.split(" ");
-
-        for(int i = 0; i < tabA.length; i++)
-            tabA[i] = tabA[i].trim();
-
-        for(int i = 0; i < tabB.length; i++)
-            tabB[i] = tabB[i].trim();
+        String[] tabA = a.split("\\s+");
+        String[] tabB = b.split("\\s+");
 
         if(tabA.length != tabB.length)
             return false;

@@ -17,18 +17,18 @@ public class DocSearcher {
     /**
      *
      * @param path - String array, each element is matched with nodes' headings
-     * @return - node that isSubsequenceOf given path
-     * @throws Exception - if no or more than one nodes are found
+     * @return - node that matches given path
+     * @throws InvalidSearchExpressionException - if no or more than one nodes are found
      */
-    public Contents getNode(DocumentPath path) throws Exception{
+    private Contents getNode(DocumentPath path) throws InvalidSearchExpressionException {
 
         LinkedList<Contents> list = findMatchingNodes(path, document);
 
         if(list.size() == 0)
-            throw new Exception("invalid search expression: no isSubsequenceOf were found");
+            throw new InvalidSearchExpressionException("Invalid search expression - no matches were found");
 
         if(list.size() > 1)
-            throw new Exception("insufficient search expression: multiple isSubsequenceOf were found");
+            throw new InvalidSearchExpressionException("Insufficient search expression - multiple matches were found");
 
         return list.getFirst();
     }
@@ -39,15 +39,15 @@ public class DocSearcher {
      * @param path1 - path for the first node
      * @param path2 - path for the second node
      * @return - list of nodes between first and second one
-     * @throws Exception - if paths are invalid or given bounds are not in order in document
+     * @throws InvalidSearchExpressionException - if paths are invalid or given bounds are not in order in document
      */
-    public LinkedList<Contents> getRange(DocumentPath path1, DocumentPath path2) throws Exception{
+    public LinkedList<Contents> getRange(DocumentPath path1, DocumentPath path2) throws InvalidSearchExpressionException {
 
         Contents first = this.getNode(path1);
         Contents second = this.getNode(path2);
 
         if(!this.areInOrder(first, second))
-            throw new Exception("invalid path: bounds reversed");
+            throw new InvalidSearchExpressionException("Search expression bounds reversed");
 
         LinkedList<Contents> list = new LinkedList<>();
 
