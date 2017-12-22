@@ -17,7 +17,7 @@ public class DocFormatter {
      * @param sourceList - input list of nodes
      * @return - properly formatted String
      */
-    public static String showContents(LinkedList<Contents> sourceList, boolean tableOfContentsMode) {
+    public static String showContents(LinkedList<Contents> sourceList, boolean tableOfContentsMode) throws InvalidFileContentsException {
 
         int maxDepth = 0;
 
@@ -45,6 +45,9 @@ public class DocFormatter {
         resultList.addAll(formatContents(sourceList, startIndent, tableOfContentsMode, maxDepth));
         deleteAdditionalEmptyLines(resultList);
 
+        if(resultList.size() == 0)
+            throw new InvalidFileContentsException("Could not format output properly");
+
         String resultStr = "";
         for(String s : resultList)
             resultStr += s + "\n";
@@ -67,6 +70,7 @@ public class DocFormatter {
 
             Contents c = sourceList.get(i);
 
+            //
             if(tableOfContentsMode && c.getHeading().getType().getDepthLevel() > maxDepth)
                 continue;
 
@@ -133,7 +137,7 @@ public class DocFormatter {
         }
 
         if(ans.length() == 0)
-            return ans;
+            return "";
 
         return ans.substring(0, ans.length() - 2) + ":";
     }
@@ -165,10 +169,10 @@ public class DocFormatter {
      */
     private static void deleteAdditionalEmptyLines(LinkedList<String> list) {
 
-        while(list.getFirst().trim().length() == 0)
+        while(list.size() > 0 && list.getFirst().trim().length() == 0)
             list.removeFirst();
 
-        while(list.getLast().trim().length() == 0)
+        while(list.size() > 0 && list.getLast().trim().length() == 0)
             list.removeLast();
 
         for(int i = 1; i < list.size(); i++)
