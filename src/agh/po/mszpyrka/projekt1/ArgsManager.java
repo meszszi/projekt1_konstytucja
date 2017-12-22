@@ -98,7 +98,7 @@ public class ArgsManager {
 
         HelpFormatter formatter = new HelpFormatter();
         formatter.setWidth(200);
-        formatter.printHelp("appname", header, this.options, footer, true);
+        formatter.printHelp("appname -h | -f <path> [-t] [-s <expression>]", header, this.options, footer, false);
 
     }
 }

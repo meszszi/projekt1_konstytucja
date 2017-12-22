@@ -57,10 +57,10 @@ public class DocFormatter {
 
 
     /**
-     * Converts contents list to table of contents with proper indents.
+     * Converts contents list to list of Strings with proper indents.
      * @param sourceList - list of Contents nodes
      * @param startIndent - if true, additional indent is set to formatted node's contents
-     * @return - properly formatted table of contents
+     * @return - properly formatted String list
      */
     private static LinkedList<String> formatContents(LinkedList<Contents> sourceList, boolean startIndent, boolean tableOfContentsMode, int maxDepth) {
 
@@ -80,6 +80,7 @@ public class DocFormatter {
             if(i > 0 && c.getHeading().getType().getDepthLevel() > sourceList.get(i - 1).getHeading().getType().getDepthLevel()) {
 
                 result.add(getPathFromLevel(c, sourceList.get(i - 1).getHeading().getType().getDepthLevel()));
+                result.add("");
                 needsIndent = true;
             }
 
