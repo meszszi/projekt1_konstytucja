@@ -79,7 +79,7 @@ public class Contents {
 
         int iterator = begin + 1;
 
-        while(iterator < sourceList.size() && sourceList.get(iterator).getType() == LineType.RegularText) {
+        while(iterator < sourceList.size() && sourceList.get(iterator).getType() == LineType.REGULAR_TEXT) {
             this.extendMainContents(sourceList.get(iterator).getContents());
             iterator++;
         }

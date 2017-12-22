@@ -51,7 +51,7 @@ public class SourceParser {
 
 
     /**
-     * Connects words from consecutive RegularText type lines if there is a hyphen at the end of the first line.
+     * Connects words from consecutive REGULAR_TEXT type lines if there is a hyphen at the end of the first line.
      * @param sourceList - list of lines created with initialParse method
      */
     private void deleteWordBreaks (LinkedList<DocLine> sourceList) {
@@ -59,7 +59,7 @@ public class SourceParser {
         for(int i = 0; i < sourceList.size() - 1; i++) {
 
             DocLine line = sourceList.get(i);
-            if(line.getType() == LineType.RegularText && Pattern.matches(".*\\p{IsAlphabetic}-$", line.getContents())) {
+            if(line.getType() == LineType.REGULAR_TEXT && Pattern.matches(".*\\p{IsAlphabetic}-$", line.getContents())) {
                 RawTextParser.deleteWordBreak(line, sourceList.get(i + 1));
 
                 if(sourceList.get(i + 1).isEmpty())
@@ -70,28 +70,28 @@ public class SourceParser {
 
 
     /**
-     * Searches for Title type lines after Chapter type lines, if one is found it's type is changed to RegularText.
+     * Searches for TITLE type lines after CHAPTER type lines, if one is found it's type is changed to REGULAR_TEXT.
      * @param sourceList - list of lines parsed with initialParse method
      */
     private void connectTitlesWithChapters (LinkedList<DocLine> sourceList) {
         for(int i = 1; i < sourceList.size(); i++) {
 
-            if(sourceList.get(i).getType() == LineType.Title && sourceList.get(i - 1).getType() == LineType.Chapter)
-                sourceList.get(i).setType(LineType.RegularText);
+            if(sourceList.get(i).getType() == LineType.TITLE && sourceList.get(i - 1).getType() == LineType.CHAPTER)
+                sourceList.get(i).setType(LineType.REGULAR_TEXT);
         }
     }
 
 
     /**
-     * Creates MainHeader from document opening title-type lines.
+     * Creates MAIN_HEADER from document opening title-type lines.
      * @param sourceList - list of DocLines parsed with initialParse method
      */
     private void setMainHeader (LinkedList<DocLine> sourceList) {
-        while(sourceList.size() > 0 && !(sourceList.getFirst().getType() == LineType.Title))  // firstly removes all contents above the first Title line
+        while(sourceList.size() > 0 && !(sourceList.getFirst().getType() == LineType.TITLE))  // firstly removes all contents above the first TITLE line
             sourceList.removeFirst();
 
-        DocLine header = new DocLine(LineType.MainHeader, "");
-        while(sourceList.size() > 0 && sourceList.getFirst().getType() == LineType.Title) { // removes all Title type lines and merges them into single Header line
+        DocLine header = new DocLine(LineType.MAIN_HEADER, "");
+        while(sourceList.size() > 0 && sourceList.getFirst().getType() == LineType.TITLE) { // removes all TITLE type lines and merges them into single Header line
             DocLine tmp = sourceList.removeFirst();
             header.setContents(header.getContents() + " " + tmp.getContents());
         }
@@ -101,12 +101,12 @@ public class SourceParser {
 
 
     /**
-     * Deletes Trash type lines from sourceList.
+     * Deletes TRASH type lines from sourceList.
      * @param sourceList - list of DocLines parsed with initialParse method
      */
     private void deleteTrash (LinkedList<DocLine> sourceList) {
         for(int i = 0; i < sourceList.size(); i++)
-            while(i < sourceList.size() && (sourceList.get(i).getType() == LineType.Trash))
+            while(i < sourceList.size() && (sourceList.get(i).getType() == LineType.TRASH))
                 sourceList.remove(i);
     }
 }

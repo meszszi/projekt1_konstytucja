@@ -15,7 +15,7 @@ public class ContentsFormatter {
 
         LinkedList<String> result = new LinkedList<>();
 
-        if(node.getHeading().getType() == LineType.MainHeader || node.getMainContents().size() == 0) {
+        if(node.getHeading().getType() == LineType.MAIN_HEADER || node.getMainContents().size() == 0) {
             result.add(node.getHeading().toString());
             result.addAll(node.getMainContents());
 
@@ -24,10 +24,10 @@ public class ContentsFormatter {
 
         String tmp = "";
 
-        if(node.getHeading().getType() == LineType.Chapter)
+        if(node.getHeading().getType() == LineType.CHAPTER)
             tmp = ":";
 
-        else if(node.getHeading().getType() == LineType.Section)
+        else if(node.getHeading().getType() == LineType.SECTION)
             tmp = ")";
 
         result.add(node.getHeading().toString() + tmp + " " + node.getMainContents().getFirst());
@@ -47,7 +47,7 @@ public class ContentsFormatter {
     public static String getHighlights(Contents node, int minDepth) {
         String ans = node.getHeading().toString();
 
-        if(node.getHeading().getType() == LineType.MainHeader) // doesn't insclude any text after heading in case of MainHeader
+        if(node.getHeading().getType() == LineType.MAIN_HEADER) // doesn't insclude any text after heading in case of MAIN_HEADER
             return ans;
 
         if(node.getMainContents().size() > 0) {                // if there are any mainContents -> includes the first line

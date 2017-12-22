@@ -2,49 +2,49 @@ package agh.po.mszpyrka.projekt1;
 
 public enum LineType {
 
-    MainHeader,             // KONSTYTUCJA RZECZYPOSPOLITEJ POLSKIEJ
-    Section,                // DZIAŁ XI
-    Chapter,                // Rozdzial 4.
-    Title,                  // RZECZPOSPOLITA
-    Article,                // Art. 123.
-    NumberDotPoint,         // 4. lub 4a.
-    NumberParenthPoint,     // 4) or 4a)
-    LetterParenthPoint,     // b)
-    RegularText,            // regular contents not including any headings
-    Trash;                  // unimportant lines
+    MAIN_HEADER,             // KONSTYTUCJA RZECZYPOSPOLITEJ POLSKIEJ
+    SECTION,                // DZIAŁ XI
+    CHAPTER,                // Rozdzial 4.
+    TITLE,                  // RZECZPOSPOLITA
+    ARTICLE,                // Art. 123.
+    NUMBER_DOT_POINT,         // 4. lub 4a.
+    NUMBER_PARENTH_POINT,     // 4) or 4a)
+    LETTER_PARENTH_POINT,     // b)
+    REGULAR_TEXT,            // regular contents not including any headings
+    TRASH;                  // unimportant lines
 
 
     /*
      * depth levels in konstytucja.txt:
-     *  0 -> MainHeader
-     *  1 -> Chapter
-     *  2 -> Title
-     *  3 -> Article
-     *  4 -> NumberDotPoint
-     *  5 -> LetterParenthPoint
+     *  0 -> MAIN_HEADER
+     *  1 -> CHAPTER
+     *  2 -> TITLE
+     *  3 -> ARTICLE
+     *  4 -> NUMBER_DOT_POINT
+     *  5 -> LETTER_PARENTH_POINT
      *
      *
      *  depth levels in uokik.txt:
-     *  0 -> MainHeader
-     *  1 -> Section
-     *  2 -> Chapter
-     *  3 -> Article
-     *  4 -> NumberDotPoint
-     *  5 -> NumberParenthPoint
-     *  6 -> LetterParenthPoint
+     *  0 -> MAIN_HEADER
+     *  1 -> SECTION
+     *  2 -> CHAPTER
+     *  3 -> ARTICLE
+     *  4 -> NUMBER_DOT_POINT
+     *  5 -> NUMBER_PARENTH_POINT
+     *  6 -> LETTER_PARENTH_POINT
      *
      *
      *  combined depth levels:
-     *  0 -> MainHeader
-     *  1 -> Section
-     *  2 -> Chapter
-     *  3 -> Title
-     *  4 -> Article
-     *  5 -> NumberDotPoint
-     *  6 -> NumberParenthPoint
-     *  7 -> LetterParenthPoint
+     *  0 -> MAIN_HEADER
+     *  1 -> SECTION
+     *  2 -> CHAPTER
+     *  3 -> TITLE
+     *  4 -> ARTICLE
+     *  5 -> NUMBER_DOT_POINT
+     *  6 -> NUMBER_PARENTH_POINT
+     *  7 -> LETTER_PARENTH_POINT
      *
-     *  + RegularText
+     *  + REGULAR_TEXT
      */
 
 

@@ -9,7 +9,7 @@ public class HeadingTest {
     public void matches() throws Exception {
 
         /*
-        DocLine line1 = new DocLine(LineType.Article, "Art. 156.");
+        DocLine line1 = new DocLine(LineType.ARTICLE, "Art. 156.");
         Heading heading1 = new Heading(line1);
 
         assertTrue(heading1.matches("art. 156."));
@@ -21,7 +21,7 @@ public class HeadingTest {
 
 
 
-        DocLine line2 = new DocLine(LineType.Article, "Art. 90–123.");
+        DocLine line2 = new DocLine(LineType.ARTICLE, "Art. 90–123.");
         Heading heading2 = new Heading(line2);
 
 

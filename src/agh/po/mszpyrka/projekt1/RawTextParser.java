@@ -22,30 +22,30 @@ public class RawTextParser {
         line = line.trim();
 
         if(line.length() < 2 || line.startsWith("©") || isDate(line))
-            return LineType.Trash;
+            return LineType.TRASH;
 
         if(line.startsWith("DZIAŁ "))
-            return LineType.Section;
+            return LineType.SECTION;
 
         if(line.startsWith("Rozdział "))
-            return LineType.Chapter;
+            return LineType.CHAPTER;
 
-        if(Character.isUpperCase(line.charAt(0)) && Character.isUpperCase(line.charAt(1)))  // not Section yet capitalised, so must be Title
-            return LineType.Title;
+        if(Character.isUpperCase(line.charAt(0)) && Character.isUpperCase(line.charAt(1)))  // not SECTION yet capitalised, so must be TITLE
+            return LineType.TITLE;
 
         if(line.startsWith("Art. "))
-            return LineType.Article;
+            return LineType.ARTICLE;
 
         if(Pattern.matches("^\\d+[a-z]?\\..*", line))   // pattern: (one or more digits) + (one or zero lowerCase letter) + ". "
-            return LineType.NumberDotPoint;
+            return LineType.NUMBER_DOT_POINT;
 
         if(Pattern.matches("^\\d+[a-z]?\\).*", line))   // pattern: (one or more digits) + (one or zero lowerCase letter) + ". "
-            return LineType.NumberParenthPoint;
+            return LineType.NUMBER_PARENTH_POINT;
 
         if(Pattern.matches("^[a-z]\\).*", line)) // pattern: (one lowerCase letter) + ") "
-            return LineType.LetterParenthPoint;
+            return LineType.LETTER_PARENTH_POINT;
 
-        return LineType.RegularText;
+        return LineType.REGULAR_TEXT;
     }
 
 
@@ -80,12 +80,12 @@ public class RawTextParser {
 
             int split;
 
-            // RegularText, Title and Trash lines don't need to be split at all
-            if(type == LineType.RegularText || type == LineType.Title || type == LineType.Trash)
+            // REGULAR_TEXT, TITLE and TRASH lines don't need to be split at all
+            if(type == LineType.REGULAR_TEXT || type == LineType.TITLE || type == LineType.TRASH)
                 split = s.length();
 
-            // Section, Chapter and Article lines need to be split at the second whitespace
-            else if(type == LineType.Section || type == LineType.Chapter || type == LineType.Article)
+            // SECTION, CHAPTER and ARTICLE lines need to be split at the second whitespace
+            else if(type == LineType.SECTION || type == LineType.CHAPTER || type == LineType.ARTICLE)
                 split = getWhitespacePosition(s, 2);
 
             // all *Point types should be split at the first whitespace
