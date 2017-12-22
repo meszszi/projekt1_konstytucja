@@ -3,8 +3,6 @@ package agh.po.mszpyrka.projekt1;
 
 import org.apache.commons.cli.*;
 
-import java.io.IOException;
-
 /**
  * class used for parsing and managing program arguments
  */
@@ -67,15 +65,15 @@ public class ArgsManager {
     /**
      * divides search expression String into array of String-paths
      * @return - array of path-arrays
-     * @throws IllegalSearchExpressionException - thrown when there is more than one colon in search expression
+     * @throws InvalidSearchExpressionException - thrown when there is more than one colon in search expression or the expression is empty
      */
-    public DocumentPath[] getSearchPaths () throws IllegalSearchExpressionException {
+    public DocumentPath[] getSearchPaths () throws InvalidSearchExpressionException {
 
         String[] paths = this.commandLine.getOptionValue("s").split(":");
 
 
         if(paths.length == 0 || paths.length > 2)
-            throw new IllegalSearchExpressionException("Invalid search expression format");
+            throw new InvalidSearchExpressionException("Invalid search expression format");
 
         DocumentPath[] result = new DocumentPath[paths.length];
         for(int i = 0; i < result.length; i++)
